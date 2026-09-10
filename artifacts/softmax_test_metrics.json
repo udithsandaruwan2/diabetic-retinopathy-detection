@@ -1,0 +1,18 @@
+{
+  "accuracy": 0.6246973365617433,
+  "precision_macro": 0.5110558416915153,
+  "recall_macro": 0.5163131313131313,
+  "f1_macro": 0.5083679028672438,
+  "precision_weighted": 0.6281587265852213,
+  "recall_weighted": 0.6246973365617433,
+  "f1_weighted": 0.6228369577488038,
+  "qwk": 0.7129535144885886,
+  "adjacent": {
+    "n": 413,
+    "exact": 0.6246973365617433,
+    "adjacent_error": 0.24213075060532688,
+    "far_error": 0.13317191283292978,
+    "mean_abs_error": 0.5399515738498789
+  },
+  "classification_report": "                  precision    recall  f1-score   support\n\n           No_DR       0.88      0.90      0.89       150\n            Mild       0.43      0.59      0.50        56\n        Moderate       0.57      0.51      0.54       135\n          Severe       0.25      0.29      0.27        28\nProliferative_DR       0.42      0.30      0.35        44\n\n        accuracy                           0.62       413\n       macro avg       0.51      0.52      0.51       413\n    weighted avg       0.63      0.62      0.62       413\n"
+}

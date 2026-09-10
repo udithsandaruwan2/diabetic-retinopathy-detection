@@ -1,0 +1,5 @@
+{
+  "selected_phase": "phase2",
+  "best_val_loss": 0.9058676958084106,
+  "checkpoint": "/home/neon-cultivator/us/diabetic-retinopathy-detection/artifacts/experiments/softmax_stable/phase2/best_softmax.keras"
+}

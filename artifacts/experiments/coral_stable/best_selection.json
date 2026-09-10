@@ -1,0 +1,5 @@
+{
+  "selected_phase": "phase2",
+  "best_val_loss": 0.2710040211677551,
+  "checkpoint": "/home/neon-cultivator/us/diabetic-retinopathy-detection/artifacts/experiments/coral_stable/phase2/best_coral.keras"
+}

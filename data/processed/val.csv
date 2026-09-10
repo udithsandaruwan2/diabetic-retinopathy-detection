@@ -1,0 +1,414 @@
+image_path,label,label_name
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_243.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_453.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_312.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_419.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_839.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_128.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_764.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_178.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_145.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_97.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_667.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_540.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_69.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_68.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_146.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_62.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_441.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_580.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_52.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_963.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_646.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_340.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_339.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_798.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_585.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_133.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_210.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_257.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_98.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_263.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_41.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_824.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_45.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_116.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_658.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_112.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_192.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_707.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_754.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_398.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_472.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_625.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_3.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_71.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_442.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_989.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_513.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_365.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_470.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_615.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_286.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_842.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_115.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_256.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_29.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_499.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_518.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_32.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_369.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_440.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_894.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_2.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_47.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_279.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_775.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_377.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_331.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_16.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_112.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_113.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_322.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_793.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_261.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_540.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_431.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_221.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_145.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_282.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_351.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_841.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_16.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_214.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_703.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_746.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_602.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_516.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_744.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_341.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_330.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_691.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_216.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_150.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_646.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_124.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_743.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_287.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_10.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_409.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_29.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_608.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_787.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_200.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_822.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_183.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_29.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_809.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_7.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_594.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_730.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_859.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_629.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_233.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_711.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_20.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_262.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_206.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_22.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_60.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_538.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_567.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_863.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_751.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_706.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_80.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_305.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_238.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_160.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_938.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_61.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_77.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_119.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_225.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_33.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_885.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_30.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_266.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_33.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_328.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_73.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_114.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_497.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_165.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_149.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_380.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_166.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_268.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_316.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_89.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_229.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_398.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_332.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_417.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_265.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_220.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_280.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_23.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_2.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_14.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_581.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_222.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_610.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_805.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_68.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_813.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_423.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_184.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_324.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_780.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_338.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_42.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_134.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_90.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_157.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_979.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_34.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_823.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_164.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_127.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_147.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_437.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_460.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_607.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_162.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_168.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_264.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_56.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_309.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_513.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_336.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_342.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_257.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_519.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_801.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_67.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_310.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_328.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_269.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_901.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_699.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_400.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_64.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_82.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_549.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_864.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_41.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_119.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_632.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_332.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_169.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_21.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_149.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_220.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_25.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_17.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_75.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_305.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_808.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_479.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_671.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_19.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_848.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_993.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_687.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_43.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_164.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_924.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_94.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_262.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_451.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_272.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_782.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_129.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_807.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_177.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_469.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_40.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_659.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_572.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_154.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_597.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_8.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_74.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_168.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_198.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_701.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_276.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_661.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_296.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_254.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_170.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_132.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_455.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_421.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_84.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_500.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_112.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_207.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_961.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_361.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_687.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_67.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_852.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_870.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_310.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_178.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_218.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_61.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_832.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_793.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_273.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_728.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_72.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_155.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_221.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_53.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_751.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_866.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_521.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_9.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_752.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_128.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_226.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_205.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_347.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_161.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_434.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_871.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_101.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_635.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_408.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_454.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_44.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_530.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_777.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_155.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_147.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_850.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_49.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_10.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_48.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_254.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_298.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_496.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_471.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_314.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_545.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_148.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_177.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_926.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_803.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_584.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_756.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_47.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_169.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_115.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_68.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_804.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_162.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_685.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_637.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_831.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_172.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_256.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_60.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_91.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_633.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_911.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_127.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_260.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_321.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_286.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_761.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_357.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_723.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_623.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_481.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_622.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_665.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_191.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_138.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_99.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_27.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_89.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_656.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_276.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_910.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_790.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_697.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_640.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_85.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_165.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_393.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_143.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_916.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_594.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_360.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_73.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_55.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_239.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_77.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_392.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_446.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_33.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_63.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_474.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_99.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_384.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_60.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_223.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_180.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_275.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_653.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_599.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_856.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_605.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_233.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_231.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_146.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_855.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_840.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_114.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_340.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_511.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_263.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_649.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_686.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_571.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_556.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_858.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_860.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_698.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_931.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_873.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_192.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Severe DR/Severe DR_146.png,3,Severe
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_418.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_847.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_172.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_336.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_238.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_988.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_107.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_119.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_514.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_797.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Moderate DR/Moderate_DR_87.png,2,Moderate
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Proliferate DR/Proliferate DR_19.png,4,Proliferative_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_271.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_502.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_584.png,0,No_DR
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Mild DR/Mild_DR_167.png,1,Mild
+/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw/Healthy/Healthy_923.png,0,No_DR

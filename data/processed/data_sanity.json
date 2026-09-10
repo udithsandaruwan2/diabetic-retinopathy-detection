@@ -1,0 +1,13 @@
+{
+  "train_n": 1924,
+  "scanned": 500,
+  "unreadable": 0,
+  "near_black": 0,
+  "label_histogram": {
+    "0": 699,
+    "1": 259,
+    "2": 630,
+    "3": 133,
+    "4": 203
+  }
+}
