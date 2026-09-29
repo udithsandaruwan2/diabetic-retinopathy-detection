@@ -222,6 +222,10 @@ __marimo__/
 models/*.keras
 models/*.h5
 models/*.onnx
+!models/best_model.keras
+
+# Coursework submission pack stays on this machine
+/CW final docs/
 
 .kaggle/
 *.zip

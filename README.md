@@ -1,6 +1,6 @@
 # Diabetic Retinopathy Stage Detection
 
-Computer Vision coursework project: **5-stage diabetic retinopathy grading** from fundus images using EfficientNetB0 transfer learning, hybrid medical preprocessing, Softmax + **CORAL ordinal** heads, Grad-CAM explainability, and a Streamlit real-time demo.
+Computer Vision coursework project: **5-stage diabetic retinopathy grading** from fundus images using EfficientNetB0 transfer learning, hybrid medical preprocessing, Softmax + **CORAL ordinal** heads, Grad-CAM explainability, and a Django screening product.
 
 ## Quick start (uv)
 
@@ -24,7 +24,25 @@ uv run python scripts/train_coral.py
 uv run python scripts/evaluate_export.py
 ```
 
-### Demo
+### Product (Django)
+
+```bash
+uv run python showcase/manage.py runserver 127.0.0.1:8000
+```
+
+Open `http://127.0.0.1:8000/` for Home, Product, and About. The screen reads `models/best_model.keras`.
+
+### Docker
+
+Weight files are not all stored in git. `models/best_model.keras` and `models/meta.json` must be present before the image is built.
+
+```bash
+docker compose up --build
+```
+
+The container serves gunicorn on port 8000 with `DJANGO_DEBUG=0`. Set `DJANGO_SECRET_KEY` in the environment before a public host.
+
+### Streamlit (optional)
 
 ```bash
 uv run streamlit run app/streamlit_app.py
@@ -56,7 +74,7 @@ Older split notebooks (`01_`…`04_`) remain for reference; CLI scripts under `s
 
 ## Dataset
 
-Primary: [`sovitrath/diabetic-retinopathy-224x224-2019-data`](https://www.kaggle.com/datasets/sovitrath/diabetic-retinopathy-224x224-2019-data) (APTOS 2019, 5 classes).
+Primary: [`sachinkumar413/diabetic-retinopathy-dataset`](https://www.kaggle.com/datasets/sachinkumar413/diabetic-retinopathy-dataset) — 2,750 fundus images, five ICDR stages. Locked split, seed 42: 1,924 train / 413 validation / 413 test.
 
 ## Disclaimer
 

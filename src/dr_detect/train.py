@@ -85,9 +85,19 @@ def _adam(lr: float, cfg: Config = CFG):
 
 
 def compile_softmax(model, lr: float, cfg: Config = CFG):
+    smooth = float(cfg.label_smoothing)
+
+    def sparse_smoothed_ce(y_true, y_pred):
+        # Integer labels stay sparse so class_weight still applies. Smoothing is inside the loss.
+        y_true = tf.cast(tf.reshape(y_true, [-1]), tf.int32)
+        n = tf.shape(y_pred)[-1]
+        y_hot = tf.one_hot(y_true, n)
+        y_hot = y_hot * (1.0 - smooth) + (smooth / tf.cast(n, tf.float32))
+        return tf.keras.losses.categorical_crossentropy(y_hot, y_pred)
+
     model.compile(
         optimizer=_adam(lr, cfg),
-        loss="sparse_categorical_crossentropy",
+        loss=sparse_smoothed_ce,
         metrics=["accuracy"],
     )
     return model

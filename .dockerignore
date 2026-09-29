@@ -1,0 +1,11 @@
+.venv
+.git
+data/raw
+data/processed
+Notes
+notebooks
+artifacts
+docs
+**/__pycache__
+**/*.pyc
+showcase/db.sqlite3

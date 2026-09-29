@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Retina</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0c0c0b;
+      --ink: #f3f1ea;
+      --muted: #8d8a82;
+      --line: rgba(243, 241, 234, 0.14);
+      --accent: #d6b48a;
+      --panel: #111110;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--bg); color: var(--ink); }
+    body {
+      min-height: 100vh;
+      font-family: "IBM Plex Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-weight: 400;
+      letter-spacing: -0.011em;
+    }
+    .shell { width: min(1120px, calc(100% - 48px)); margin: 0 auto; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 28px 0 22px;
+      border-bottom: 1px solid var(--line);
+    }
+    .mark {
+      font-family: "Instrument Serif", Georgia, serif;
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: -0.03em;
+    }
+    .mark span { color: var(--muted); font-style: italic; }
+    .meta {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .work {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 640px;
+    }
+    @media (max-width: 860px) {
+      .work { grid-template-columns: 1fr; }
+      .side { border-right: 0; border-bottom: 1px solid var(--line); }
+    }
+    .side {
+      padding: 28px 28px 28px 0;
+      border-right: 1px solid var(--line);
+    }
+    .stage {
+      padding: 28px 0 28px 32px;
+    }
+    h2 {
+      margin: 0 0 18px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+    label.file {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+      color: var(--ink);
+    }
+    label.file small { color: var(--muted); }
+    input[type=file] { display: none; }
+    .actions { display: flex; gap: 10px; margin-top: 18px; }
+    button {
+      appearance: none;
+      border: 0;
+      background: var(--ink);
+      color: #111;
+      font: 500 13px/1 "IBM Plex Sans", sans-serif;
+      padding: 11px 16px;
+      cursor: pointer;
+    }
+    button.quiet {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+    button:disabled { opacity: 0.45; cursor: progress; }
+    #status {
+      margin: 22px 0 0;
+      min-height: 2.6em;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .reading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+    .reading em {
+      font-family: "Instrument Serif", Georgia, serif;
+      font-style: italic;
+      font-size: 64px;
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+      font-weight: 400;
+    }
+    .reading .score { text-align: right; }
+    .reading .score b {
+      display: block;
+      font-family: "Instrument Serif", Georgia, serif;
+      font-weight: 400;
+      font-size: 36px;
+      letter-spacing: -0.03em;
+    }
+    #arch { margin: 14px 0 0; }
+    .shots {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 26px;
+    }
+    .shots figure { margin: 0; }
+    .shots img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      background: #000;
+      display: block;
+    }
+    .shots figcaption {
+      margin-top: 8px;
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .net-wrap { margin-top: 28px; border-top: 1px solid var(--line); padding-top: 16px; }
+    canvas { width: 100%; height: 280px; display: block; }
+    .hidden { display: none; }
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 16px 0 28px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="mark">Retina <span>Screen</span></div>
+      <div class="meta">EfficientNetB0 · CORAL · five stages</div>
+    </header>
+    <div class="work">
+      <aside class="side">
+        <h2>Study</h2>
+        <form id="form">
+          {% csrf_token %}
+          <label class="file" for="image">
+            <span id="fileLabel">Choose a fundus photograph</span>
+            <small>JPG, PNG</small>
+          </label>
+          <input id="image" name="image" type="file" accept="image/png,image/jpeg" />
+          <div class="actions">
+            <button id="go" type="submit">Analyse</button>
+            <button id="sample" class="quiet" type="button">Test image</button>
+          </div>
+        </form>
+        <p id="status">Nothing loaded.</p>
+      </aside>
+      <section class="stage">
+        <div id="result" class="hidden">
+          <div class="reading">
+            <div>
+              <div class="meta">Stage</div>
+              <em id="gradeName">—</em>
+            </div>
+            <div class="score">
+              <div class="meta">Certainty</div>
+              <b id="confidence">—</b>
+            </div>
+          </div>
+          <p class="meta" id="arch"></p>
+          <div class="shots">
+            <figure><img id="imgRaw" alt="Fundus photograph" /><figcaption>Input</figcaption></figure>
+            <figure><img id="imgPrep" alt="Prepared retina" /><figcaption>Prepared</figcaption></figure>
+            <figure><img id="imgCam" alt="Attention map" /><figcaption>Attention</figcaption></figure>
+          </div>
+        </div>
+        <div class="net-wrap">
+          <div class="meta" style="margin-bottom: 8px;">Forward pass</div>
+          <canvas id="net" width="1600" height="520"></canvas>
+        </div>
+      </section>
+    </div>
+    <footer>{{ disclaimer }}</footer>
+  </div>
+  <script>
+    const form = document.getElementById("form");
+    const statusEl = document.getElementById("status");
+    const canvas = document.getElementById("net");
+    const ctx = canvas.getContext("2d");
+    const fileInput = document.getElementById("image");
+    let payload = null;
+    let playStart = 0;
+    let raf = 0;
+
+    fileInput.addEventListener("change", () => {
+      const file = fileInput.files && fileInput.files[0];
+      document.getElementById("fileLabel").textContent = file ? file.name : "Choose a fundus photograph";
+    });
+
+    function csrf() {
+      const input = form.querySelector("[name=csrfmiddlewaretoken]");
+      return input ? input.value : "";
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+      if (!data.get("image") || !data.get("image").name) {
+        statusEl.textContent = "Choose a photograph first.";
+        return;
+      }
+      send(data);
+    });
+
+    document.getElementById("sample").addEventListener("click", () => {
+      const data = new FormData();
+      data.append("csrfmiddlewaretoken", csrf());
+      data.append("sample", "1");
+      send(data);
+    });
+
+    async function send(data) {
+      statusEl.textContent = "Reading the photograph.";
+      document.getElementById("go").disabled = true;
+      try {
+        const response = await fetch("/api/screen", { method: "POST", body: data });
+        const body = await response.json();
+        if (!response.ok) throw new Error(body.error || "Request failed");
+        show(body);
+        statusEl.textContent = "Stage " + body.grade + " of 4. The trace below is this photograph.";
+      } catch (err) {
+        statusEl.textContent = err.message;
+      } finally {
+        document.getElementById("go").disabled = false;
+      }
+    }
+
+    function pretty(name) {
+      return String(name || "").replaceAll("_", " ");
+    }
+
+    function show(body) {
+      payload = body;
+      document.getElementById("result").classList.remove("hidden");
+      document.getElementById("gradeName").textContent = pretty(body.grade_name);
+      document.getElementById("confidence").textContent = Math.round(body.confidence * 100) + "%";
+      const head = body.coral ? "Ordinal head" : "Softmax head";
+      document.getElementById("arch").textContent =
+        body.layer_count + " layers  ·  " + body.param_count.toLocaleString() + " weights  ·  " + head;
+      document.getElementById("imgRaw").src = body.images.original;
+      document.getElementById("imgPrep").src = body.images.preprocessed;
+      document.getElementById("imgCam").src = body.images.gradcam;
+      playStart = performance.now();
+      if (!raf) raf = requestAnimationFrame(frame);
+    }
+
+    function nodesFor(stage) {
+      return Math.max(4, Math.min(8, Math.round(Math.log2((stage.units || 16) + 1))));
+    }
+
+    function layout(width, height) {
+      const stages = payload.stages;
+      const cols = stages.length;
+      const top = 24;
+      const bottom = 78;
+      return stages.map((stage, i) => {
+        const count = nodesFor(stage);
+        const x = (i + 0.5) * (width / cols);
+        const nodes = [];
+        for (let k = 0; k < count; k++) {
+          const y = top + ((k + 0.5) / count) * (height - top - bottom);
+          nodes.push({ x, y });
+        }
+        return { stage, nodes };
+      });
+    }
+
+    function frame(now) {
+      raf = requestAnimationFrame(frame);
+      const width = canvas.width;
+      const height = canvas.height;
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = "#0c0c0b";
+      ctx.fillRect(0, 0, width, height);
+      if (!payload) {
+        ctx.fillStyle = "#8d8a82";
+        ctx.font = "16px IBM Plex Sans, sans-serif";
+        ctx.fillText("The network trace appears after a reading.", 28, height / 2);
+        return;
+      }
+      const columns = layout(width, height);
+      const elapsed = (now - playStart) / 1400;
+      const cursor = elapsed % (columns.length + 0.6);
+
+      for (let i = 0; i < columns.length - 1; i++) {
+        const a = columns[i];
+        const b = columns[i + 1];
+        const live = cursor > i && cursor < i + 1.15;
+        a.nodes.forEach((na, ai) => {
+          const nb = b.nodes[Math.min(b.nodes.length - 1, Math.round(ai * (b.nodes.length - 1) / Math.max(1, a.nodes.length - 1)))];
+          const nb2 = b.nodes[Math.min(b.nodes.length - 1, ai % b.nodes.length)];
+          [nb, nb2].forEach((target) => {
+            ctx.beginPath();
+            ctx.moveTo(na.x, na.y);
+            ctx.lineTo(target.x, target.y);
+            const alpha = live ? 0.28 + a.stage.intensity * 0.45 : 0.06 + a.stage.intensity * 0.08;
+            ctx.strokeStyle = live ? "rgba(214,180,138," + alpha + ")" : "rgba(243,241,234," + alpha + ")";
+            ctx.lineWidth = live ? 1.1 : 0.6;
+            ctx.stroke();
+          });
+        });
+      }
+
+      columns.forEach((col, i) => {
+        const live = cursor > i - 0.15 && cursor < i + 1;
+        col.nodes.forEach((node) => {
+          const r = live ? 3.2 + col.stage.intensity * 1.6 : 2.1;
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
+          ctx.fillStyle = live ? "#f3f1ea" : "rgba(243,241,234,0.45)";
+          ctx.fill();
+        });
+        ctx.textAlign = "center";
+        ctx.fillStyle = live ? "#d6b48a" : "#8d8a82";
+        ctx.font = "13px IBM Plex Mono, monospace";
+        ctx.fillText(col.stage.label, col.nodes[0].x, height - 36);
+        ctx.font = "12px IBM Plex Mono, monospace";
+        ctx.fillStyle = "#6f6c66";
+        const units = col.stage.units ? col.stage.units + " units" : col.stage.layers + " layers";
+        ctx.fillText(units, col.nodes[0].x, height - 16);
+      });
+    }
+    raf = requestAnimationFrame(frame);
+  </script>
+</body>
+</html>

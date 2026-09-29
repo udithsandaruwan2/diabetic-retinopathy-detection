@@ -41,6 +41,7 @@ class Config:
     reduce_lr_factor: float = 0.5
     clipnorm: float = 1.0
     freeze_bn_on_finetune: bool = True
+    label_smoothing: float = 0.1  # Softmax only
     qwk_each_epoch: bool = False  # True on GPU; full-val predict is slow on CPU
 
     # Kaggle dataset

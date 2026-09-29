@@ -15,6 +15,7 @@ from dr_detect.data import (
     build_dataframe,
     class_weights_dict,
     download_kaggle_dataset,
+    oversample_rare_classes,
     stratified_splits,
 )
 from dr_detect.metrics import plot_history
@@ -50,11 +51,14 @@ def main():
         cw = class_weights_dict(train_df)
         cw_path.write_text(json.dumps(cw, indent=2))
 
-    train_seq = FundusSequence(train_df, batch_size=CFG.batch_size, shuffle=True, augment=True)
+    # Class weights stay on the original train counts. Oversample Mild/Severe for fitting only.
+    train_fit = oversample_rare_classes(train_df)
+    print(f"Train oversample (Mild+Severe → majority): {len(train_df)} → {len(train_fit)}")
+    train_seq = FundusSequence(train_fit, batch_size=CFG.batch_size, shuffle=True, augment=True)
     val_seq = FundusSequence(val_df, batch_size=CFG.batch_size, shuffle=False, augment=False)
 
     model = build_softmax_model()
-    out_dir = CFG.artifacts_dir / "experiments" / "softmax_stable"
+    out_dir = CFG.artifacts_dir / "experiments" / "softmax_acc"
     model, history, final_path = two_phase_train(
         model,
         train_seq,
@@ -65,13 +69,13 @@ def main():
         cfg=CFG,
     )
 
-    plot_history(history, CFG.figures_dir / "softmax_curves.png", title="Softmax Training (stable)")
+    plot_history(history, CFG.figures_dir / "softmax_curves.png", title="Softmax Training (acc)")
     model.save(CFG.models_dir / "softmax_effb0.keras")
     print(f"Saved {final_path} and models/softmax_effb0.keras")
 
     log_path = ROOT / "docs" / "EXPERIMENT_LOG.md"
     with log_path.open("a", encoding="utf-8") as f:
-        f.write("\n## EXP-STABLE-001a — Softmax EfficientNetB0 (BN-safe)\n\n")
+        f.write("\n## EXP-ACC-001a — Softmax richer head + oversample\n\n")
         f.write(f"- Config: `{json.dumps(CFG.to_dict())}`\n")
         f.write(f"- Artifact: `{final_path}`\n")
         f.write(f"- Curves: `docs/figures/softmax_curves.png`\n")

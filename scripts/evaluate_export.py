@@ -34,11 +34,18 @@ def _load(path: Path):
     )
 
 
-def eval_model(model, seq, coral: bool):
+def _predict_tta(model, x: np.ndarray) -> np.ndarray:
+    """Average the forward pass with a horizontal flip. Scoring only — not training labels."""
+    p = model.predict(x, verbose=0)
+    p_flip = model.predict(np.flip(x, axis=2), verbose=0)
+    return 0.5 * (p + p_flip)
+
+
+def eval_model(model, seq, coral: bool, tta: bool = True):
     ys, preds = [], []
     for i in range(len(seq)):
         x, y = seq[i]
-        p = model.predict(x, verbose=0)
+        p = _predict_tta(model, x) if tta else model.predict(x, verbose=0)
         if coral:
             pred = coral_logits_to_label(p)
             true = y.sum(axis=-1).astype(int)

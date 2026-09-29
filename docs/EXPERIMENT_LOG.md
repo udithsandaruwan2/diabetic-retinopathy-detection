@@ -87,6 +87,19 @@ _(Training runs appended below as they complete.)_
 - **Tertiary:** 3+2 epochs too short for ReduceLR/ES to recover.
 - **Not primary:** per-epoch shuffle already in `FundusSequence.on_epoch_end`.
 
+## PRODUCT_GUIDE — docs-first product bible (2026-09-22)
+
+- Source: `docs/PRODUCT_GUIDE.md` → HTML/PDF via `scripts/export_product_guide.py`
+- Metrics updated by EXP-ACC-001 (`models/meta.json`)
+
+## EXP-ACC-001 — Richer head, train-only oversample, TTA (COMPLETE)
+
+- **Date:** 2026-09-29
+- **Train only:** `train.csv` with Mild and Severe duplicated to 699 each (2930 rows). `val.csv` for early stopping. `test.csv` scored once with horizontal-flip averaging.
+- **Phase-2 train-loss vs end of Phase 1:** Softmax +3.6% (1.427 → 1.479); CORAL −0.8% (0.256 → 0.254).
+- **Test:** Softmax Acc 0.511 / QWK 0.657; **CORAL Acc 0.627 / QWK 0.768** (far-error 0.082). Winner exported to `models/best_model.keras`.
+- **Still future:** longer schedule, val-QWK selection, EfficientNetB3, external datasets.
+
 ## EXP-STABLE-001 — Stabilized retraining (COMPLETE)
 
 - **Date:** 2026-09-10
@@ -124,3 +137,23 @@ _(Training runs appended below as they complete.)_
 - Winner: **coral** (QWK=0.7190)
 - meta: `models/meta.json`
 - Results: `{"softmax": {"accuracy": 0.6246973365617433, "precision_macro": 0.5110558416915153, "recall_macro": 0.5163131313131313, "f1_macro": 0.5083679028672438, "precision_weighted": 0.6281587265852213, "recall_weighted": 0.6246973365617433, "f1_weighted": 0.6228369577488038, "qwk": 0.7129535144885886, "adjacent": {"n": 413, "exact": 0.6246973365617433, "adjacent_error": 0.24213075060532688, "far_error": 0.13317191283292978, "mean_abs_error": 0.5399515738498789}}, "coral": {"accuracy": 0.6271186440677966, "precision_macro": 0.41805066072573016, "recall_macro": 0.45734391534391533, "f1_macro": 0.4355096098479826, "precision_weighted": 0.571629919696417, "recall_weighted": 0.6271186440677966, "f1_weighted": 0.5960260621352537, "qwk": 0.7190319332179493, "adjacent": {"n": 413, "exact": 0.6271186440677966, "adjacent_error": 0.26150121065375304, "far_error": 0.11138014527845036, "mean_abs_error": 0.5012106537530266}}}`
+
+## EXP-ACC-001a — Softmax richer head + oversample
+
+- Config: `{"seed": 42, "img_size": 224, "batch_size": 8, "num_classes": 5, "train_frac": 0.7, "val_frac": 0.15, "test_frac": 0.15, "crop_tol": 7, "clahe_clip": 2.0, "clahe_tile": 8, "graham_sigma": 10.0, "unsharp_sigma": 1.0, "unsharp_amount": 1.5, "backbone": "EfficientNetB0", "dropout": 0.3, "phase1_lr": 0.0003, "phase2_lr": 1e-05, "phase1_epochs": 8, "phase2_epochs": 8, "unfreeze_last": 20, "early_stop_patience": 3, "reduce_lr_patience": 2, "reduce_lr_factor": 0.5, "clipnorm": 1.0, "freeze_bn_on_finetune": true, "label_smoothing": 0.1, "qwk_each_epoch": false, "kaggle_dataset": "sachinkumar413/diabetic-retinopathy-dataset", "data_dir": "/home/neon-cultivator/us/diabetic-retinopathy-detection/data", "raw_dir": "/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw", "processed_dir": "/home/neon-cultivator/us/diabetic-retinopathy-detection/data/processed", "models_dir": "/home/neon-cultivator/us/diabetic-retinopathy-detection/models", "figures_dir": "/home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures", "artifacts_dir": "/home/neon-cultivator/us/diabetic-retinopathy-detection/artifacts"}`
+- Artifact: `/home/neon-cultivator/us/diabetic-retinopathy-detection/artifacts/experiments/softmax_acc/softmax_final.keras`
+- Curves: `docs/figures/softmax_curves.png`
+- Selection: `/home/neon-cultivator/us/diabetic-retinopathy-detection/artifacts/experiments/softmax_acc/best_selection.json`
+
+## EXP-ACC-001b — CORAL richer head + oversample
+
+- Config: `{"seed": 42, "img_size": 224, "batch_size": 8, "num_classes": 5, "train_frac": 0.7, "val_frac": 0.15, "test_frac": 0.15, "crop_tol": 7, "clahe_clip": 2.0, "clahe_tile": 8, "graham_sigma": 10.0, "unsharp_sigma": 1.0, "unsharp_amount": 1.5, "backbone": "EfficientNetB0", "dropout": 0.3, "phase1_lr": 0.0003, "phase2_lr": 1e-05, "phase1_epochs": 8, "phase2_epochs": 8, "unfreeze_last": 20, "early_stop_patience": 3, "reduce_lr_patience": 2, "reduce_lr_factor": 0.5, "clipnorm": 1.0, "freeze_bn_on_finetune": true, "label_smoothing": 0.1, "qwk_each_epoch": false, "kaggle_dataset": "sachinkumar413/diabetic-retinopathy-dataset", "data_dir": "/home/neon-cultivator/us/diabetic-retinopathy-detection/data", "raw_dir": "/home/neon-cultivator/us/diabetic-retinopathy-detection/data/raw", "processed_dir": "/home/neon-cultivator/us/diabetic-retinopathy-detection/data/processed", "models_dir": "/home/neon-cultivator/us/diabetic-retinopathy-detection/models", "figures_dir": "/home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures", "artifacts_dir": "/home/neon-cultivator/us/diabetic-retinopathy-detection/artifacts"}`
+- Artifact: `/home/neon-cultivator/us/diabetic-retinopathy-detection/artifacts/experiments/coral_acc/coral_final.keras`
+- Curves: `docs/figures/coral_curves.png`
+- Selection: `/home/neon-cultivator/us/diabetic-retinopathy-detection/artifacts/experiments/coral_acc/best_selection.json`
+
+## EXP-003 — Test evaluation & export
+
+- Winner: **coral** (QWK=0.7676)
+- meta: `models/meta.json`
+- Results: `{"softmax": {"accuracy": 0.5108958837772397, "precision_macro": 0.4353369963369963, "recall_macro": 0.5120952380952382, "f1_macro": 0.3604546221744557, "precision_weighted": 0.6308429343054041, "recall_weighted": 0.5108958837772397, "f1_weighted": 0.45007318371928323, "qwk": 0.6571890181314222, "adjacent": {"n": 413, "exact": 0.5108958837772397, "adjacent_error": 0.3922518159806295, "far_error": 0.09685230024213075, "mean_abs_error": 0.6440677966101694}}, "coral": {"accuracy": 0.6271186440677966, "precision_macro": 0.6453144341815438, "recall_macro": 0.5342332852332853, "f1_macro": 0.4732426404036369, "precision_weighted": 0.7308809611765459, "recall_weighted": 0.6271186440677966, "f1_weighted": 0.6172445502089479, "qwk": 0.7676161688709482, "adjacent": {"n": 413, "exact": 0.6271186440677966, "adjacent_error": 0.29055690072639223, "far_error": 0.08232445520581114, "mean_abs_error": 0.4721549636803874}}}`

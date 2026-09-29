@@ -1,0 +1,13 @@
+{% extends "screening/base.html" %}
+{% block title %}About · Retina{% endblock %}
+{% block content %}
+  <section class="prose">
+    <div class="kicker">About</div>
+    <h1>A screening assistant, built as one product.</h1>
+    <p>Retina is a desk for reading diabetic retinopathy stage from a fundus photograph. It is not a clinic, and it is not a device that replaces an ophthalmologist. The grade is there so a person can decide who should be seen sooner.</p>
+    <p>The network is EfficientNetB0, trained in two phases with batch-norm kept frozen, then a CORAL head that predicts whether the stage sits above each step of the scale. The screen you open is that same model: preparation, prediction, attention map, and a trace of the real layers.</p>
+    <h2>Who made it</h2>
+    <p>Developed by <a href="{{ developer_url }}">Udith Sandaruwan</a>. The public site is <a href="{{ developer_url }}">udithsandaruwan.com</a>.</p>
+    <p>The photographs used to train and test the model are a public fundus collection. Nothing uploaded in the screen is stored after the reading returns.</p>
+  </section>
+{% endblock %}

@@ -153,6 +153,30 @@ def stratified_splits(
     )
 
 
+def oversample_rare_classes(
+    df: pd.DataFrame,
+    labels: tuple[int, ...] = (1, 3),
+    seed: int = CFG.seed,
+) -> pd.DataFrame:
+    """Duplicate Mild (1) and Severe (3) until each matches the majority class count.
+
+    Use on the training split only. Validation and test stay one row per image.
+    """
+    counts = df["label"].value_counts()
+    target = int(counts.max())
+    rng = np.random.default_rng(seed)
+    parts = [df]
+    for lab in labels:
+        subset = df[df["label"] == int(lab)]
+        n = len(subset)
+        if n == 0 or n >= target:
+            continue
+        extra_idx = rng.choice(subset.index.to_numpy(), size=target - n, replace=True)
+        parts.append(df.loc[extra_idx])
+    out = pd.concat(parts, ignore_index=True)
+    return out.sample(frac=1.0, random_state=seed).reset_index(drop=True)
+
+
 def class_weights_dict(train_df: pd.DataFrame) -> dict[int, float]:
     classes = np.unique(train_df["label"].values)
     weights = compute_class_weight(

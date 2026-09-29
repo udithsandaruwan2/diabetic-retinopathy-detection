@@ -19,6 +19,15 @@ def _backbone(img_size: int = CFG.img_size, trainable: bool = False):
     return base
 
 
+def _notes_head(x, dropout: float, units: int, activation: str | None, out_name: str):
+    """Course-notes head: Dense(512) → Dropout → Dense(256) → Dropout → logits/probs."""
+    x = layers.Dense(512, activation="relu", name="dense_512")(x)
+    x = layers.Dropout(dropout, name="dropout_512")(x)
+    x = layers.Dense(256, activation="relu", name="dense_256")(x)
+    x = layers.Dropout(dropout, name="dropout_256")(x)
+    return layers.Dense(units, activation=activation, name=out_name)(x)
+
+
 def build_softmax_model(
     img_size: int = CFG.img_size,
     dropout: float = CFG.dropout,
@@ -26,8 +35,7 @@ def build_softmax_model(
 ) -> tf.keras.Model:
     base = _backbone(img_size, trainable=False)
     x = layers.GlobalAveragePooling2D(name="gap")(base.output)
-    x = layers.Dropout(dropout, name="dropout")(x)
-    out = layers.Dense(num_classes, activation="softmax", name="predictions")(x)
+    out = _notes_head(x, dropout, num_classes, "softmax", "predictions")
     model = models.Model(inputs=base.input, outputs=out, name="dr_softmax_effb0")
     model._backbone = base  # type: ignore[attr-defined]
     return model
@@ -41,9 +49,7 @@ def build_coral_model(
     """CORAL head: num_classes-1 logits (no activation); sigmoid applied in loss/metrics."""
     base = _backbone(img_size, trainable=False)
     x = layers.GlobalAveragePooling2D(name="gap")(base.output)
-    x = layers.Dropout(dropout, name="dropout")(x)
-    # Bias-only rank thresholds via Dense without activation
-    out = layers.Dense(num_classes - 1, activation=None, name="coral_logits")(x)
+    out = _notes_head(x, dropout, num_classes - 1, None, "coral_logits")
     model = models.Model(inputs=base.input, outputs=out, name="dr_coral_effb0")
     model._backbone = base  # type: ignore[attr-defined]
     return model

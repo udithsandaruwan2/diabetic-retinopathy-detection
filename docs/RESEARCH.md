@@ -2,7 +2,9 @@
 
 **Module:** NIBM BSc (Hons) Computer Science — Computer Vision (BSCCOMP24.2P)  
 **Assessment:** CW1 Individual Project (100 marks)  
-**Last updated:** 2026-09-09
+**Last updated:** 2026-09-22
+
+**Product bible:** full end-to-end production narrative (not CW-framed) lives in [`PRODUCT_GUIDE.md`](PRODUCT_GUIDE.md) / [`PRODUCT_GUIDE.pdf`](PRODUCT_GUIDE.pdf). Accuracy upgrades beyond the stable B0 Softmax/CORAL export are documented there as a roadmap only (docs-first; no retrain in that snapshot).
 
 ---
 
@@ -144,6 +146,7 @@ Observed Softmax/CORAL “epoch-3” collapse was a **merged-curve artifact**: P
 ## 8. Executed results snapshot
 
 - Dataset: sachinkumar413/diabetic-retinopathy-dataset (2750 images, 5 classes).
-- Winner: CORAL EfficientNetB0, test QWK ≈ 0.718 (Softmax QWK ≈ 0.662).
+- Stable winner (EXP-STABLE-001): CORAL EfficientNetB0 — test Acc ≈ 0.627, QWK ≈ 0.719 (Softmax Acc ≈ 0.625, QWK ≈ 0.713).
 - Artifacts: `models/best_model.keras`, `models/meta.json`.
 - Demo: `uv run streamlit run app/streamlit_app.py`.
+- Product guide: `docs/PRODUCT_GUIDE.pdf`.

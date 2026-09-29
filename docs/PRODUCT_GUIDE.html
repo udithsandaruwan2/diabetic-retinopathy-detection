@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>DR Stage Screening — Product Guide</title>
+<style>
+@page { size: A4; margin: 18mm 16mm; }
+:root {
+  --ink: #1a1f26;
+  --muted: #5a6570;
+  --line: #d8dee6;
+  --accent: #0b6e4f;
+  --bg: #fafbfc;
+}
+* { box-sizing: border-box; }
+html { font-size: 11pt; }
+body {
+  font-family: "Source Serif 4", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.55;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+}
+h1, h2, h3, h4 {
+  font-family: "IBM Plex Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.25;
+  color: var(--ink);
+  page-break-after: avoid;
+}
+h1 { font-size: 1.85rem; border-bottom: 3px solid var(--accent); padding-bottom: 0.4rem; }
+h2 {
+  font-size: 1.35rem;
+  margin-top: 2rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--line);
+  page-break-before: auto;
+}
+h3 { font-size: 1.1rem; margin-top: 1.4rem; color: #243040; }
+p, li { orphans: 3; widows: 3; }
+a { color: var(--accent); text-decoration: none; }
+code, pre {
+  font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  font-size: 0.86em;
+}
+code {
+  background: #eef2f6;
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+pre {
+  background: #121820;
+  color: #e8eef5;
+  padding: 0.9rem 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  page-break-inside: avoid;
+}
+pre code { background: transparent; color: inherit; padding: 0; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.9rem 0 1.2rem;
+  font-size: 0.92em;
+  page-break-inside: avoid;
+}
+th, td {
+  border: 1px solid var(--line);
+  padding: 0.4rem 0.55rem;
+  text-align: left;
+  vertical-align: top;
+}
+th { background: #e8f2ee; font-family: "IBM Plex Sans", Arial, sans-serif; }
+tr:nth-child(even) td { background: #f4f7fa; }
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0.75rem auto 1rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  page-break-inside: avoid;
+}
+hr { border: none; border-top: 1px solid var(--line); margin: 1.5rem 0; }
+blockquote {
+  margin: 1rem 0;
+  padding: 0.4rem 0 0.4rem 1rem;
+  border-left: 3px solid var(--accent);
+  color: var(--muted);
+}
+.meta {
+  font-family: "IBM Plex Sans", Arial, sans-serif;
+  font-size: 0.92rem;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+#toc ul { list-style: none; padding-left: 0; }
+#toc li { margin: 0.25rem 0; }
+@media print {
+  body { background: white; padding: 0; max-width: none; }
+  a { color: inherit; }
+  h2 { page-break-before: auto; }
+  pre { white-space: pre-wrap; }
+}
+</style>
+</head>
+<body>
+<h1 id="diabetic-retinopathy-stage-screening-product-guide">Diabetic Retinopathy Stage Screening — Product Guide</h1>
+<p><strong>Audience:</strong> product owners, engineers, and operators who need the full story of this system.<br />
+<strong>Not a coursework report</strong> — this is the production-oriented product bible.<br />
+<strong>Status:</strong> EXP-ACC-001 export (2026-09-29). Test split never used for training.<br />
+<strong>Deployed winner:</strong> CORAL · test Acc <strong>0.627</strong> · QWK <strong>0.768</strong> · <code>models/best_model.keras</code></p>
+<hr />
+<h2 id="table-of-contents">Table of contents</h2>
+<ol>
+<li><a href="#1-product-overview">Product overview</a></li>
+<li><a href="#2-problem-and-clinical-concepts">Problem and clinical concepts</a></li>
+<li><a href="#3-data-acquisition">Data acquisition</a></li>
+<li><a href="#4-cleaning-and-dataset-preparation">Cleaning and dataset preparation</a></li>
+<li><a href="#5-preprocessing-pipeline">Preprocessing pipeline</a></li>
+<li><a href="#6-augmentation-and-class-balancing">Augmentation and class balancing</a></li>
+<li><a href="#7-model-concepts">Model concepts</a></li>
+<li><a href="#8-training-operations">Training operations</a></li>
+<li><a href="#9-results">Results</a></li>
+<li><a href="#10-demo-and-product-ux">Demo and product UX</a></li>
+<li><a href="#11-limitations">Limitations</a></li>
+<li><a href="#12-accuracy-upgrade-roadmap-research--not-executed">Accuracy upgrade roadmap</a></li>
+<li><a href="#13-glossary">Glossary</a></li>
+<li><a href="#14-how-to-reproduce">How to reproduce</a></li>
+</ol>
+<hr />
+<h2 id="1-product-overview">1. Product overview</h2>
+<h3 id="what-this-product-is">What this product is</h3>
+<p>An automated <strong>screening assistant</strong> that grades color fundus photographs into five International Clinical Diabetic Retinopathy (ICDR) stages:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Code</th>
+<th>Stage</th>
+<th>Meaning for triage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0</td>
+<td>No_DR</td>
+<td>No diabetic retinal lesions</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td>Mild</td>
+<td>Microaneurysms only</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>Moderate</td>
+<td>More than mild; less than severe</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>Severe</td>
+<td>Extensive hemorrhages / venous beading / IRMA</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>Proliferative_DR</td>
+<td>Neovascularization or vitreous/preretinal hemorrhage</td>
+</tr>
+</tbody>
+</table>
+<h3 id="what-it-is-not">What it is not</h3>
+<ul>
+<li>Not a medical device.</li>
+<li>Not a replacement for an ophthalmologist.</li>
+<li>Not approved for autonomous diagnosis or treatment decisions.</li>
+</ul>
+<p>Outputs are <strong>decision support</strong>: stage label, confidence / risk framing, and Grad-CAM heatmaps so a human can see <em>where</em> the network attended.</p>
+<h3 id="who-uses-it">Who uses it</h3>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Screening clinic staff</td>
+<td>Upload fundus images; prioritize high-risk grades for specialist review</td>
+</tr>
+<tr>
+<td>Engineers / ML ops</td>
+<td>Retrain, evaluate, export <code>best_model.keras</code> + <code>meta.json</code></td>
+</tr>
+<tr>
+<td>Demo stakeholders</td>
+<td>Streamlit UI with preprocess preview + Grad-CAM</td>
+</tr>
+</tbody>
+</table>
+<h3 id="what-ships">What ships</h3>
+<pre><code class="language-text">models/best_model.keras   ← deployed network (CORAL winner)
+models/meta.json          ← winner flag, class names, metrics, preprocess knobs
+app/streamlit_app.py      ← real-time demo
+src/dr_detect/            ← reusable package (data, preprocess, models, train, metrics, explain)
+scripts/                  ← CLI: download, train, evaluate, data sanity, diagrams
+</code></pre>
+<p><img alt="End-to-end system" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/diagram_system.png" /></p>
+<hr />
+<h2 id="2-problem-and-clinical-concepts">2. Problem and clinical concepts</h2>
+<h3 id="why-dr-screening-matters">Why DR screening matters</h3>
+<p>Diabetic retinopathy damages retinal microvasculature. Untreated progression can cause irreversible vision loss. Specialist grading capacity is limited; automation helps <strong>triage</strong> — put Severe and Proliferative cases in front of clinicians sooner.</p>
+<h3 id="what-the-model-must-learn-to-see">What the model must learn to “see”</h3>
+<ul>
+<li><strong>Microaneurysms</strong> — tiny outpouchings of capillaries (early Mild).</li>
+<li><strong>Hemorrhages / exudates / cotton-wool spots</strong> — Moderate–Severe disease load.</li>
+<li><strong>Neovascularization / vitreous hemorrhage</strong> — Proliferative DR (highest urgency).</li>
+</ul>
+<h3 id="why-grades-are-ordered">Why grades are <em>ordered</em></h3>
+<p>Mild → Moderate is clinically closer than Mild → Proliferative. A model that confuses Mild with Moderate is less dangerous than one that calls Proliferative “No_DR”. That is why this product optimizes and reports <strong>Quadratic Weighted Kappa (QWK)</strong> alongside accuracy:</p>
+<ul>
+<li>QWK rewards adjacent mistakes and punishes far mistakes.</li>
+<li>Accuracy alone can look “OK” while still making dangerous jumps across the scale.</li>
+</ul>
+<h3 id="softmax-vs-ordinal-thinking">Softmax vs ordinal thinking</h3>
+<ul>
+<li><strong>Softmax</strong> treats classes as unrelated buckets (classical multi-class).</li>
+<li><strong>CORAL</strong> models cumulative thresholds: <em>P(y &gt; 0), P(y &gt; 1), P(y &gt; 2), P(y &gt; 3)</em> — naturally ordinal and aligned with QWK.</li>
+</ul>
+<hr />
+<h2 id="3-data-acquisition">3. Data acquisition</h2>
+<h3 id="primary-dataset">Primary dataset</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Source</td>
+<td>Kaggle <code>sachinkumar413/diabetic-retinopathy-dataset</code></td>
+</tr>
+<tr>
+<td>Approximate size</td>
+<td>~350 MB download</td>
+</tr>
+<tr>
+<td>Images used</td>
+<td><strong>2750</strong> labeled fundus images</td>
+</tr>
+<tr>
+<td>Structure</td>
+<td>Folders per severity</td>
+</tr>
+</tbody>
+</table>
+<h3 id="folder-stage-map">Folder → stage map</h3>
+<table>
+<thead>
+<tr>
+<th>Folder name</th>
+<th>Internal stage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Healthy</td>
+<td>No_DR (0)</td>
+</tr>
+<tr>
+<td>Mild DR</td>
+<td>Mild (1)</td>
+</tr>
+<tr>
+<td>Moderate DR</td>
+<td>Moderate (2)</td>
+</tr>
+<tr>
+<td>Severe DR</td>
+<td>Severe (3)</td>
+</tr>
+<tr>
+<td>Proliferate DR</td>
+<td>Proliferative_DR (4)</td>
+</tr>
+</tbody>
+</table>
+<p>Download is automated via the Kaggle API (<code>scripts/download_dataset.py</code> / <code>dr_detect.data.download_kaggle_dataset</code>), with credentials in a locked-down <code>kaggle.json</code> (<code>chmod 600</code>).</p>
+<h3 id="ethics-and-data-governance">Ethics and data governance</h3>
+<ul>
+<li>Public secondary research data — <strong>no PHI</strong> stored in the repo by design.</li>
+<li>Labels can be noisy (single-grader bias possible).</li>
+<li>No guaranteed patient-level IDs in this pack → risk of eye-pair leakage; document as a limitation.</li>
+<li>Outputs remain screening support only.</li>
+</ul>
+<h3 id="why-this-dataset-vs-larger-eyepacs-aptos-packs">Why this dataset (vs larger EyePACS / APTOS packs)</h3>
+<p>Chosen for a complete multi-class download on constrained local hardware, five explicit folders, and room to own the full preprocess stack (CLAHE / Graham / unsharp) rather than relying on a pre-filtered pack.</p>
+<hr />
+<h2 id="4-cleaning-and-dataset-preparation">4. Cleaning and dataset preparation</h2>
+<h3 id="indexing">Indexing</h3>
+<ol>
+<li>Walk <code>data/raw/</code> and build a DataFrame of <code>image_path</code>, <code>label</code>, <code>label_name</code>.</li>
+<li>Persist the full index as <code>data/processed/all_images.csv</code>.</li>
+<li>Stratified split (SEED=<strong>42</strong>): <strong>70% / 15% / 15%</strong> train / val / test.</li>
+<li>Write <code>train.csv</code>, <code>val.csv</code>, <code>test.csv</code>, <code>split_stats.json</code>, <code>class_weights.json</code>.</li>
+</ol>
+<h3 id="split-counts-locked-for-all-stable-experiments">Split counts (locked for all stable experiments)</h3>
+<table>
+<thead>
+<tr>
+<th>Split</th>
+<th style="text-align: right;">N</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Train</td>
+<td style="text-align: right;">1924</td>
+</tr>
+<tr>
+<td>Val</td>
+<td style="text-align: right;">413</td>
+</tr>
+<tr>
+<td>Test</td>
+<td style="text-align: right;">413</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td style="text-align: right;"><strong>2750</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Train class counts:</strong> No_DR 699 · Mild 259 · Moderate 630 · Severe 133 · Proliferative_DR 203.</p>
+<p>Severe is the scarcest class (~7% of train) — the main imbalance driver.</p>
+<p><img alt="Class distribution" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/class_distribution.png" /></p>
+<p><img alt="Split counts" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/split_counts.png" /></p>
+<p><img alt="Sample gallery" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/sample_gallery.png" /></p>
+<h3 id="data-sanity-check">Data sanity check</h3>
+<p><code>scripts/data_sanity.py</code> samples train images and records:</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Result (stable run)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Scanned</td>
+<td>500</td>
+</tr>
+<tr>
+<td>Unreadable</td>
+<td><strong>0</strong></td>
+</tr>
+<tr>
+<td>Near-black (mean &lt; 5)</td>
+<td><strong>0</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Artifact: <code>data/processed/data_sanity.json</code>.</p>
+<p>Shuffle runs every epoch in <code>FundusSequence.on_epoch_end</code> so batches are not stuck in a fixed bad order.</p>
+<hr />
+<h2 id="5-preprocessing-pipeline">5. Preprocessing pipeline</h2>
+<p>Raw camera frames vary in illumination, fringe darkness, and contrast. The product applies a fixed <strong>hybrid fundus preprocess</strong> before both training and inference so the model always sees the same distribution.</p>
+<p><img alt="Preprocessing diagram" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/diagram_preprocess.png" /></p>
+<h3 id="steps-in-order">Steps (in order)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Step</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Dark-border crop</strong> (<code>tol=7</code>)</td>
+<td>Remove black framing so the retina fills the frame</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>CLAHE</strong> on LAB L-channel (<code>clipLimit=2.0</code>, tiles 8×8)</td>
+<td>Local contrast — microaneurysms / vessels stand out</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Ben Graham</strong> illumination (<code>addWeighted</code> 4/−4 + Gaussian σ=10)</td>
+<td>Classic DR competition trick for lighting normalization</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Unsharp mask</strong> (σ=1.0, amount=1.5)</td>
+<td>Edge enhancement for lesion boundaries</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Resize 224×224</strong></td>
+<td>EfficientNet input size</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>EfficientNet <code>preprocess_input</code></strong></td>
+<td>Match ImageNet transfer-learning scale</td>
+</tr>
+</tbody>
+</table>
+<p>Implementation: <code>src/dr_detect/preprocess.py</code> · knobs in <code>src/dr_detect/config.py</code>.</p>
+<p><img alt="Preprocess stages" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/preprocess_stages.png" /></p>
+<hr />
+<h2 id="6-augmentation-and-class-balancing">6. Augmentation and class balancing</h2>
+<h3 id="augmentation-train-only">Augmentation (train only)</h3>
+<p>Never augment val/test — that would leak optimistic metrics.</p>
+<p>Typical transforms (see <code>src/dr_detect/augment.py</code>): horizontal flip, small rotation (~±15°), zoom, brightness/contrast jitter, small translation.</p>
+<p><img alt="Augmentation mosaic" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/augmentation_mosaic.png" /></p>
+<h3 id="class-weights">Class weights</h3>
+<p><code>sklearn</code> balanced weights from the train split (stored in <code>data/processed/class_weights.json</code>):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Class</th>
+<th style="text-align: right;">Weight (approx.)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0 No_DR</td>
+<td style="text-align: right;">0.55</td>
+</tr>
+<tr>
+<td style="text-align: right;">1 Mild</td>
+<td style="text-align: right;">1.49</td>
+</tr>
+<tr>
+<td style="text-align: right;">2 Moderate</td>
+<td style="text-align: right;">0.61</td>
+</tr>
+<tr>
+<td style="text-align: right;">3 Severe</td>
+<td style="text-align: right;">2.89</td>
+</tr>
+<tr>
+<td style="text-align: right;">4 Proliferative</td>
+<td style="text-align: right;">1.90</td>
+</tr>
+</tbody>
+</table>
+<p>Softmax training uses these weights. CORAL uses cumulative multi-label levels (ordinal structure carries its own balance dynamics).</p>
+<hr />
+<h2 id="7-model-concepts">7. Model concepts</h2>
+<p><img alt="Softmax architecture" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/diagram_softmax.png" /></p>
+<p><img alt="CORAL architecture" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/diagram_coral.png" /></p>
+<h3 id="backbone-efficientnetb0">Backbone: EfficientNetB0</h3>
+<ul>
+<li>ImageNet pretrained, <code>include_top=False</code>, input <strong>224×224×3</strong>.</li>
+<li>Chosen for local RAM (~7 GB) and CPU inference; B3 remains a GPU stretch goal (see roadmap).</li>
+</ul>
+<h3 id="softmax-head">Softmax head</h3>
+<pre><code class="language-text">EfficientNetB0 → GlobalAveragePooling2D → Dropout(0.3) → Dense(5, softmax)
+</code></pre>
+<p>Loss: sparse categorical cross-entropy (+ class weights).</p>
+<h3 id="coral-ordinal-head">CORAL ordinal head</h3>
+<pre><code class="language-text">EfficientNetB0 → GAP → Dropout(0.3) → Dense(4, linear)   # logits for P(y&gt;k), k=0..3
+</code></pre>
+<ul>
+<li>Loss: binary cross-entropy on cumulative levels (CORAL loss).</li>
+<li>Decode: sigmoid → count how many thresholds fire → integer grade 0–4.</li>
+<li><strong>Do not</strong> trust Keras “accuracy” on raw CORAL logits — that metric is misleading.</li>
+</ul>
+<h3 id="transfer-learning-two-phases-bn-safe">Transfer learning: two phases (BN-safe)</h3>
+<p><img alt="TL phases" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/diagram_tl_phases.png" /></p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>What trains</th>
+<th>LR</th>
+<th>Epochs (cap)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Head only (backbone frozen)</td>
+<td><code>3e-4</code></td>
+<td>up to 8</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Last <strong>20 non-BN</strong> backbone layers</td>
+<td><code>1e-5</code></td>
+<td>up to 8</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Stability rules (critical product knowledge):</strong></p>
+<ol>
+<li>Keep all <strong>BatchNormalization</strong> layers frozen / inference-mode during fine-tune (Keras TL recipe — thawing BN destroys ImageNet running stats and caused earlier mid-run collapse).</li>
+<li>Adam with <strong><code>clipnorm=1.0</code></strong>.</li>
+<li>EarlyStopping + ReduceLROnPlateau on <code>val_loss</code>.</li>
+<li>After both phases, <strong>export the better checkpoint</strong> of phase1 vs phase2 by <code>val_loss</code> — never ship the last crashed epoch.</li>
+</ol>
+<p>On the stable run, Phase-2 train-loss spike vs end of Phase-1 was <strong>≈ −1% (Softmax)</strong> and <strong>≈ −2% (CORAL)</strong> — i.e. no collapse.</p>
+<hr />
+<h2 id="8-training-operations">8. Training operations</h2>
+<h3 id="hardware-profile-this-product-build">Hardware profile (this product build)</h3>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Observation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Local GPU</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Local RAM</td>
+<td>~7 GB</td>
+</tr>
+<tr>
+<td>Training venue</td>
+<td>Local CPU for stable B0 runs; Kaggle GPU recommended for heavier upgrades</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Hardware / venue" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/diagram_hardware.png" /></p>
+<h3 id="artifact-layout">Artifact layout</h3>
+<pre><code class="language-text">artifacts/experiments/softmax_stable/
+  config.json
+  phase1/best_softmax.keras  history.csv
+  phase2/best_softmax.keras  history.csv
+  best_selection.json
+  softmax_final.keras
+  history.json
+
+artifacts/experiments/coral_stable/
+  … (same pattern with best_coral.keras)
+
+models/
+  softmax_effb0.keras
+  coral_effb0.keras
+  best_model.keras      ← copy of winner
+  meta.json
+</code></pre>
+<p>Stable selection:</p>
+<ul>
+<li>Softmax: <strong>phase2</strong>, best val_loss ≈ <strong>0.906</strong></li>
+<li>CORAL: <strong>phase2</strong>, best val_loss ≈ <strong>0.271</strong></li>
+</ul>
+<h3 id="cli-entrypoints">CLI entrypoints</h3>
+<pre><code class="language-bash">uv run python scripts/download_dataset.py
+uv run python scripts/run_eda.py            # figures + splits
+uv run python scripts/data_sanity.py
+uv run python scripts/train_softmax.py      # reuses data/processed/*.csv
+uv run python scripts/train_coral.py
+uv run python scripts/evaluate_export.py    # test metrics + best_model + meta
+uv run streamlit run app/streamlit_app.py
+</code></pre>
+<p>Package code lives under <code>src/dr_detect/</code> — scripts are thin wrappers.</p>
+<hr />
+<h2 id="9-results">9. Results</h2>
+<p>Held-out <strong>test set N = 413</strong> (never used for training or early stopping). Metrics from <code>models/meta.json</code> after <strong>EXP-ACC-001</strong> (richer head, train-only Mild/Severe oversample, Softmax label smoothing 0.1, horizontal-flip test-time average).</p>
+<h3 id="headline-comparison">Headline comparison</h3>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th style="text-align: right;">Accuracy</th>
+<th style="text-align: right;">Macro-F1</th>
+<th style="text-align: right;">Weighted-F1</th>
+<th style="text-align: right;"><strong>QWK</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Softmax</td>
+<td style="text-align: right;">0.511</td>
+<td style="text-align: right;">0.360</td>
+<td style="text-align: right;">0.450</td>
+<td style="text-align: right;">0.657</td>
+</tr>
+<tr>
+<td><strong>CORAL (winner)</strong></td>
+<td style="text-align: right;"><strong>0.627</strong></td>
+<td style="text-align: right;">0.473</td>
+<td style="text-align: right;">0.617</td>
+<td style="text-align: right;"><strong>0.768</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Prior stable thin-head run: Softmax Acc 0.625 / QWK 0.713; CORAL Acc 0.627 / QWK 0.719. EXP-ACC-001 kept CORAL accuracy and raised QWK past 0.75. Softmax got worse on this split, so it is not deployed.</p>
+<p><img alt="Softmax vs CORAL" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/softmax_vs_coral.png" /></p>
+<h3 id="error-structure-adjacent-vs-far">Error structure (adjacent vs far)</h3>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th style="text-align: right;">Exact</th>
+<th style="text-align: right;">Adjacent (±1)</th>
+<th style="text-align: right;">Far (≥2)</th>
+<th style="text-align: right;">Mean abs error</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Softmax</td>
+<td style="text-align: right;">0.511</td>
+<td style="text-align: right;">0.392</td>
+<td style="text-align: right;">0.097</td>
+<td style="text-align: right;">0.644</td>
+</tr>
+<tr>
+<td>CORAL</td>
+<td style="text-align: right;">0.627</td>
+<td style="text-align: right;">0.291</td>
+<td style="text-align: right;"><strong>0.082</strong></td>
+<td style="text-align: right;"><strong>0.472</strong></td>
+</tr>
+</tbody>
+</table>
+<p>CORAL’s far-error rate fell from 0.111 (stable run) to <strong>0.082</strong>. Proliferative recall on the test report is only 0.02 (1 of 44) — still the weak class.</p>
+<h3 id="phase-2-stability">Phase-2 stability</h3>
+<p>Train-loss change from the last Phase-1 epoch to the first Phase-2 epoch: Softmax about <strong>+3.6%</strong>, CORAL about <strong>−0.8%</strong>. Both stay under the 20% spike limit.</p>
+<h3 id="confusion-matrices-and-curves">Confusion matrices and curves</h3>
+<p><img alt="Softmax CM" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/cm_softmax.png" /></p>
+<p><img alt="CORAL CM" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/cm_coral.png" /></p>
+<p><img alt="Softmax curves" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/softmax_curves.png" /></p>
+<p><img alt="CORAL curves" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/coral_curves.png" /></p>
+<p>Curve plots mark the Phase-1 → Phase-2 boundary so “epoch 3 collapse” is not misread as a data bug.</p>
+<h3 id="explainability">Explainability</h3>
+<p>Grad-CAM on the last convolutional block; overlays should concentrate on vessels / lesions rather than borders.</p>
+<p><img alt="Grad-CAM" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/diagram_gradcam.png" /></p>
+<p><img alt="Grad-CAM gallery" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/gradcam_gallery.png" /></p>
+<h3 id="product-interpretation">Product interpretation</h3>
+<ul>
+<li>Prefer <strong>CORAL</strong> when ordinal triage quality (QWK, far-error) is the primary KPI.</li>
+<li>Softmax remains useful as a <strong>baseline</strong> and has stronger macro-F1 on this split — useful for per-class debugging (Severe / PDR remain hard for both).</li>
+</ul>
+<hr />
+<h2 id="10-demo-and-product-ux">10. Demo and product UX</h2>
+<p><img alt="Web UX" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/diagram_web_ux.png" /></p>
+<h3 id="launch">Launch</h3>
+<pre><code class="language-bash">uv run streamlit run app/streamlit_app.py
+</code></pre>
+<h3 id="user-flow">User flow</h3>
+<ol>
+<li>App loads <code>models/best_model.keras</code> + <code>models/meta.json</code> (cached).</li>
+<li>User uploads a fundus image (or picks a sample).</li>
+<li>Pipeline runs the same preprocess as training.</li>
+<li>UI shows: predicted stage, risk-oriented framing, preprocess previews, Grad-CAM overlay.</li>
+<li>Persistent <strong>disclaimer</strong>: screening assistant only — not for diagnosis.</li>
+</ol>
+<h3 id="deployment-contract">Deployment contract</h3>
+<p>Any future model swap must:</p>
+<ol>
+<li>Write weights to <code>models/best_model.keras</code>.</li>
+<li>Update <code>models/meta.json</code> with <code>coral</code> boolean, <code>class_names</code>, metrics, preprocess knobs.</li>
+<li>Keep preprocess identical to training (<code>CFG</code> values).</li>
+</ol>
+<hr />
+<h2 id="11-limitations">11. Limitations</h2>
+<table>
+<thead>
+<tr>
+<th>Limitation</th>
+<th>Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU-short schedule (8+8 with early stop)</td>
+<td>Not fully converged vs notes’ longer GPU recipes</td>
+</tr>
+<tr>
+<td>Severe / Proliferative scarcity</td>
+<td>Weaker recall on rare high-risk grades</td>
+</tr>
+<tr>
+<td>No patient-level split IDs</td>
+<td>Possible correlated eyes across splits</td>
+</tr>
+<tr>
+<td>Camera / clinic domain shift</td>
+<td>Metrics may drop on external cameras</td>
+</tr>
+<tr>
+<td>Single public dataset</td>
+<td>Not a multi-site clinical validation</td>
+</tr>
+<tr>
+<td>Grad-CAM is explanatory, not proof</td>
+<td>Heatmaps aid trust; they are not ground-truth lesions</td>
+</tr>
+</tbody>
+</table>
+<p>Treat published Acc / QWK as <strong>benchmarks on this split</strong>, not clinical performance claims.</p>
+<hr />
+<h2 id="12-accuracy-upgrade-roadmap">12. Accuracy upgrade roadmap</h2>
+<p>EXP-ACC-001 trained the items marked <strong>done</strong> below. The test CSV stayed held out. Items marked <strong>future</strong> were not trained.</p>
+<h3 id="priority-stack">Priority stack</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Priority</th>
+<th>Change</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">P0</td>
+<td>Richer head: GAP → Dense(512) → Dropout → Dense(256) → Dropout → output</td>
+<td><strong>Done</strong> (both heads)</td>
+</tr>
+<tr>
+<td style="text-align: right;">P0</td>
+<td>Rare-class oversampling of Mild and Severe on the <strong>train</strong> split only</td>
+<td><strong>Done</strong> (each matched the majority count, 699)</td>
+</tr>
+<tr>
+<td style="text-align: right;">P1</td>
+<td>Softmax label smoothing 0.1</td>
+<td><strong>Done</strong> (did not improve Softmax test metrics)</td>
+</tr>
+<tr>
+<td style="text-align: right;">P1</td>
+<td>Horizontal-flip average at evaluation</td>
+<td><strong>Done</strong></td>
+</tr>
+<tr>
+<td style="text-align: right;">P1</td>
+<td>Longer BN-safe schedule (e.g. 15+15)</td>
+<td>Future</td>
+</tr>
+<tr>
+<td style="text-align: right;">P2</td>
+<td>Select checkpoints by val QWK</td>
+<td>Future</td>
+</tr>
+<tr>
+<td style="text-align: right;">P2</td>
+<td>Unfreeze last 30 non-BN layers</td>
+<td>Future</td>
+</tr>
+<tr>
+<td style="text-align: right;">P3</td>
+<td>EfficientNetB3 on a GPU</td>
+<td>Future</td>
+</tr>
+<tr>
+<td style="text-align: right;">P3</td>
+<td>External validation (Messidor-2 / full APTOS)</td>
+<td>Future</td>
+</tr>
+<tr>
+<td style="text-align: right;">P3</td>
+<td>Softmax and CORAL ensemble</td>
+<td>Future</td>
+</tr>
+</tbody>
+</table>
+<h3 id="what-exp-acc-001-met">What EXP-ACC-001 met</h3>
+<ol>
+<li>Phase-2 train-loss spike stayed under 20% (Softmax +3.6%, CORAL −0.8%).</li>
+<li>CORAL test QWK <strong>0.768</strong> (≥ 0.75) and far-error fell to 0.082.</li>
+<li>Proliferative recall is non-zero but tiny (0.02).</li>
+<li>Same <code>data/processed/*.csv</code> splits. Test images were not added to training.</li>
+</ol>
+<hr />
+<h2 id="13-glossary">13. Glossary</h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fundus</td>
+<td>Photo of the retina through the pupil</td>
+</tr>
+<tr>
+<td>ICDR</td>
+<td>International Clinical Diabetic Retinopathy scale (0–4)</td>
+</tr>
+<tr>
+<td>Transfer learning</td>
+<td>Reuse ImageNet weights; adapt to fundus</td>
+</tr>
+<tr>
+<td>Fine-tune</td>
+<td>Unfreeze top backbone layers at low LR</td>
+</tr>
+<tr>
+<td>BatchNorm (BN)</td>
+<td>Normalization layers with running mean/variance — keep frozen when fine-tuning</td>
+</tr>
+<tr>
+<td>Softmax</td>
+<td>Multi-class probability head</td>
+</tr>
+<tr>
+<td>CORAL</td>
+<td>Consistent Rank Logits — ordinal cumulative thresholds</td>
+</tr>
+<tr>
+<td>QWK</td>
+<td>Quadratic Weighted Kappa — ordinal agreement metric</td>
+</tr>
+<tr>
+<td>Grad-CAM</td>
+<td>Gradient-weighted Class Activation Mapping — heatmap explainability</td>
+</tr>
+<tr>
+<td>CLAHE</td>
+<td>Contrast Limited Adaptive Histogram Equalization</td>
+</tr>
+<tr>
+<td>Ben Graham prep</td>
+<td>Illumination normalization popularized in Kaggle DR</td>
+</tr>
+<tr>
+<td>Class weight</td>
+<td>Per-class loss multiplier to counter imbalance</td>
+</tr>
+<tr>
+<td>Screening assistant</td>
+<td>Prioritizes review; does not diagnose</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="14-how-to-reproduce">14. How to reproduce</h2>
+<h3 id="environment">Environment</h3>
+<pre><code class="language-bash">cd diabetic-retinopathy-detection
+uv sync
+# place Kaggle credentials at ~/.kaggle/kaggle.json (chmod 600)
+</code></pre>
+<h3 id="full-pipeline-from-scratch">Full pipeline (from scratch)</h3>
+<pre><code class="language-bash">uv run python scripts/download_dataset.py
+uv run python scripts/run_eda.py
+uv run python scripts/data_sanity.py
+uv run python scripts/train_softmax.py
+uv run python scripts/train_coral.py
+uv run python scripts/evaluate_export.py
+uv run streamlit run app/streamlit_app.py
+</code></pre>
+<h3 id="interactive-walkthrough">Interactive walkthrough</h3>
+<p><code>notebooks/DR_Stage_Detection_Complete_Walkthrough.ipynb</code> — same concepts cell-by-cell, including the BN-safe stability notes.</p>
+<h3 id="export-this-guide-to-pdf">Export this guide to PDF</h3>
+<pre><code class="language-bash">uv run python scripts/export_product_guide.py
+# writes docs/PRODUCT_GUIDE.html and docs/PRODUCT_GUIDE.pdf
+</code></pre>
+<h3 id="source-documents-deeper-reference">Source documents (deeper reference)</h3>
+<table>
+<thead>
+<tr>
+<th>Doc</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>docs/PRODUCT_GUIDE.md</code></td>
+<td><strong>This product bible</strong></td>
+</tr>
+<tr>
+<td><code>docs/RESEARCH.md</code></td>
+<td>Research log and method rationale</td>
+</tr>
+<tr>
+<td><code>docs/ARCHITECTURE.md</code></td>
+<td>Mermaid architecture sources</td>
+</tr>
+<tr>
+<td><code>docs/EXPERIMENT_LOG.md</code></td>
+<td>Chronological training runs</td>
+</tr>
+<tr>
+<td><code>docs/DECISION_LOG.md</code></td>
+<td>Design decisions</td>
+</tr>
+<tr>
+<td><code>Notes/KNOWLEDGE_CACHE.md</code></td>
+<td>Distilled course/product notes</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>Document version: 2026-09-29 · Metrics from EXP-ACC-001 · Test split held out · B3 and external validation still future.</em></p>
+</body>
+</html>

@@ -1,0 +1,9 @@
+services:
+  retina:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DJANGO_DEBUG: "0"
+      DJANGO_ALLOWED_HOSTS: "*"
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-change-me-before-public-hosting}

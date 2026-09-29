@@ -1,0 +1,204 @@
+{% extends "screening/base.html" %}
+{% block title %}Product · Retina{% endblock %}
+{% block content %}
+  <section class="desk">
+    <div class="kicker">Product</div>
+    <h1 style="font-size: clamp(40px, 5vw, 56px); margin-bottom: 8px;">Screen</h1>
+    <p class="lede" style="margin-bottom: 28px;">Upload a fundus photograph, or run a held-out test image. The stage, the attention map, and the forward pass are for this frame only.</p>
+    <div class="window" style="padding: 8px 18px 18px;">
+    <div class="desk-grid">
+      <aside>
+        <form id="form">
+          {% csrf_token %}
+          <label class="file" for="image">
+            <span id="fileLabel">Choose a fundus photograph</span>
+            <small>JPG, PNG</small>
+          </label>
+          <input id="image" name="image" type="file" accept="image/png,image/jpeg" />
+          <div class="actions">
+            <button id="go" class="solid" type="submit">Analyse</button>
+            <button id="sample" class="quiet" type="button">Test image</button>
+          </div>
+        </form>
+        <p id="status">Nothing loaded.</p>
+      </aside>
+      <section>
+        <div id="result" class="hidden">
+          <div class="reading">
+            <div>
+              <div class="mono">Stage</div>
+              <em id="gradeName">—</em>
+            </div>
+            <div>
+              <div class="mono">Certainty</div>
+              <b id="confidence">—</b>
+            </div>
+          </div>
+          <p class="mono" id="arch" style="margin-top: 16px;"></p>
+          <div class="shots">
+            <figure><img id="imgRaw" alt="Fundus photograph" /><figcaption class="mono">Input</figcaption></figure>
+            <figure><img id="imgPrep" alt="Prepared retina" /><figcaption class="mono">Prepared</figcaption></figure>
+            <figure><img id="imgCam" alt="Attention map" /><figcaption class="mono">Attention</figcaption></figure>
+          </div>
+        </div>
+        <div style="margin-top: 22px; border-top: 1px solid var(--line); padding-top: 12px;">
+          <div class="mono">Forward pass</div>
+          <canvas id="net" width="1600" height="520"></canvas>
+        </div>
+      </section>
+    </div>
+    </div>
+  </section>
+{% endblock %}
+{% block script %}
+<script>
+  const form = document.getElementById("form");
+  const statusEl = document.getElementById("status");
+  const canvas = document.getElementById("net");
+  const ctx = canvas.getContext("2d");
+  const fileInput = document.getElementById("image");
+  let payload = null;
+  let playStart = 0;
+  let raf = 0;
+
+  fileInput.addEventListener("change", () => {
+    const file = fileInput.files && fileInput.files[0];
+    document.getElementById("fileLabel").textContent = file ? file.name : "Choose a fundus photograph";
+  });
+
+  function csrf() {
+    const input = form.querySelector("[name=csrfmiddlewaretoken]");
+    return input ? input.value : "";
+  }
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const data = new FormData(form);
+    if (!data.get("image") || !data.get("image").name) {
+      statusEl.textContent = "Choose a photograph first.";
+      return;
+    }
+    send(data);
+  });
+
+  document.getElementById("sample").addEventListener("click", () => {
+    const data = new FormData();
+    data.append("csrfmiddlewaretoken", csrf());
+    data.append("sample", "1");
+    send(data);
+  });
+
+  async function send(data) {
+    statusEl.textContent = "Reading the photograph.";
+    document.getElementById("go").disabled = true;
+    try {
+      const response = await fetch("/api/screen", { method: "POST", body: data });
+      const body = await response.json();
+      if (!response.ok) throw new Error(body.error || "Request failed");
+      show(body);
+      statusEl.textContent = "Stage " + body.grade + " of 4. The trace below is this photograph.";
+    } catch (err) {
+      statusEl.textContent = err.message;
+    } finally {
+      document.getElementById("go").disabled = false;
+    }
+  }
+
+  function pretty(name) {
+    return String(name || "").replaceAll("_", " ");
+  }
+
+  function show(body) {
+    payload = body;
+    document.getElementById("result").classList.remove("hidden");
+    document.getElementById("gradeName").textContent = pretty(body.grade_name);
+    document.getElementById("confidence").textContent = Math.round(body.confidence * 100) + "%";
+    const head = body.coral ? "Ordinal head" : "Softmax head";
+    document.getElementById("arch").textContent =
+      body.layer_count + " layers  ·  " + body.param_count.toLocaleString() + " weights  ·  " + head;
+    document.getElementById("imgRaw").src = body.images.original;
+    document.getElementById("imgPrep").src = body.images.preprocessed;
+    document.getElementById("imgCam").src = body.images.gradcam;
+    playStart = performance.now();
+    if (!raf) raf = requestAnimationFrame(frame);
+  }
+
+  function nodesFor(stage) {
+    return Math.max(4, Math.min(8, Math.round(Math.log2((stage.units || 16) + 1))));
+  }
+
+  function layout(width, height) {
+    const stages = payload.stages;
+    const cols = stages.length;
+    const top = 24;
+    const bottom = 78;
+    return stages.map((stage, i) => {
+      const count = nodesFor(stage);
+      const x = (i + 0.5) * (width / cols);
+      const nodes = [];
+      for (let k = 0; k < count; k++) {
+        const y = top + ((k + 0.5) / count) * (height - top - bottom);
+        nodes.push({ x, y });
+      }
+      return { stage, nodes };
+    });
+  }
+
+  function frame(now) {
+    raf = requestAnimationFrame(frame);
+    const width = canvas.width;
+    const height = canvas.height;
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = "#07090d";
+    ctx.fillRect(0, 0, width, height);
+    if (!payload) {
+      ctx.fillStyle = "#93a3b5";
+      ctx.font = "16px Outfit, sans-serif";
+      ctx.fillText("The network trace appears after a reading.", 28, height / 2);
+      return;
+    }
+    const columns = layout(width, height);
+    const elapsed = (now - playStart) / 1400;
+    const cursor = elapsed % (columns.length + 0.6);
+
+    for (let i = 0; i < columns.length - 1; i++) {
+      const a = columns[i];
+      const b = columns[i + 1];
+      const live = cursor > i && cursor < i + 1.15;
+      a.nodes.forEach((na, ai) => {
+        const nb = b.nodes[Math.min(b.nodes.length - 1, Math.round(ai * (b.nodes.length - 1) / Math.max(1, a.nodes.length - 1)))];
+        const nb2 = b.nodes[Math.min(b.nodes.length - 1, ai % b.nodes.length)];
+        [nb, nb2].forEach((target) => {
+          ctx.beginPath();
+          ctx.moveTo(na.x, na.y);
+          ctx.lineTo(target.x, target.y);
+          const alpha = live ? 0.28 + a.stage.intensity * 0.45 : 0.07 + a.stage.intensity * 0.08;
+          ctx.strokeStyle = live ? "rgba(126,200,255," + alpha + ")" : "rgba(180,200,220," + alpha + ")";
+          ctx.lineWidth = live ? 1.1 : 0.6;
+          ctx.stroke();
+        });
+      });
+    }
+
+    columns.forEach((col, i) => {
+      const live = cursor > i - 0.15 && cursor < i + 1;
+      col.nodes.forEach((node) => {
+        const r = live ? 3.2 + col.stage.intensity * 1.6 : 2.1;
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
+        ctx.fillStyle = live ? "#eef3f8" : "rgba(238,243,248,0.4)";
+        ctx.fill();
+      });
+      ctx.textAlign = "center";
+      ctx.fillStyle = live ? "#7ec8ff" : "#93a3b5";
+      ctx.font = "13px Outfit, sans-serif";
+      ctx.fillText(col.stage.label, col.nodes[0].x, height - 36);
+      ctx.font = "12px Outfit, sans-serif";
+      ctx.fillStyle = "#6d7c8e";
+      const units = col.stage.units ? col.stage.units + " units" : col.stage.layers + " layers";
+      ctx.fillText(units, col.nodes[0].x, height - 16);
+    });
+  }
+  raf = requestAnimationFrame(frame);
+</script>
+{% endblock %}

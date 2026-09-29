@@ -1,0 +1,62 @@
+{% extends "screening/base.html" %}
+{% block title %}Retina{% endblock %}
+{% block content %}
+  <section class="hero">
+    <div>
+      <div class="kicker">Diabetic retinopathy screening</div>
+      <h1>Read the stage from a <em>single</em> photograph.</h1>
+      <p class="lede">Retina is a screening desk. A fundus image goes in. A stage from no disease to proliferative, an attention map, and the network’s forward pass come back.</p>
+      <div class="row">
+        <a class="btn" href="/product">Open the screen</a>
+        <a class="btn line" href="/about">About the product</a>
+      </div>
+    </div>
+    <div class="window" aria-hidden="true">
+      <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span style="margin-left:8px;">retina / screen</span></div>
+      <div class="pane">
+        <div class="fundus"></div>
+        <div class="sidepane">
+          <div class="pill"><b>Stage 2</b><span>Moderate · illustration</span></div>
+          <div class="pill"><b>Attention</b><span>Grad-CAM on the live reading</span></div>
+          <div class="pill"><b>Trace</b><span>Stem through the ordinal head</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="flow" aria-label="How a reading moves through Retina">
+    <div class="stack">
+      <div class="card"><b>Photograph</b><span>A color fundus frame from the camera.</span></div>
+      <div class="card"><b>Preparation</b><span>Crop, contrast, illumination, then 224 pixels.</span></div>
+      <div class="card"><b>Network</b><span>EfficientNetB0 with an ordinal CORAL head.</span></div>
+    </div>
+    <div class="core"><div><strong>Retina</strong><small>one pass</small></div></div>
+    <div class="stack">
+      <div class="card"><b>Stage</b><span>No DR through proliferative, 0 to 4.</span></div>
+      <div class="card"><b>Attention</b><span>The regions that moved the score.</span></div>
+      <div class="card"><b>Trace</b><span>Real layers, lit by this image.</span></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="kicker">The platform</div>
+    <h2>Home, the screen, and the record of how it was built.</h2>
+    <div class="grid3">
+      <a class="card" href="/"><b>Home</b><p>What the desk is for, and how a photograph becomes a stage.</p></a>
+      <a class="card" href="/product"><b>Product</b><p>Upload a frame or run a held-out test image. The model answers on this page.</p></a>
+      <a class="card" href="/about"><b>About</b><p>The training setup, the limit of the tool, and who developed it.</p></a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="kicker">Scale</div>
+    <h2>Five ordered stages.</h2>
+    <div class="stages">
+      <div><b>0</b><span>No DR</span></div>
+      <div><b>1</b><span>Mild</span></div>
+      <div><b>2</b><span>Moderate</span></div>
+      <div><b>3</b><span>Severe</span></div>
+      <div><b>4</b><span>Proliferative</span></div>
+    </div>
+  </section>
+{% endblock %}

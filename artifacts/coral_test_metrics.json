@@ -1,18 +1,18 @@
 {
   "accuracy": 0.6271186440677966,
-  "precision_macro": 0.41805066072573016,
-  "recall_macro": 0.45734391534391533,
-  "f1_macro": 0.4355096098479826,
-  "precision_weighted": 0.571629919696417,
+  "precision_macro": 0.6453144341815438,
+  "recall_macro": 0.5342332852332853,
+  "f1_macro": 0.4732426404036369,
+  "precision_weighted": 0.7308809611765459,
   "recall_weighted": 0.6271186440677966,
-  "f1_weighted": 0.5960260621352537,
-  "qwk": 0.7190319332179493,
+  "f1_weighted": 0.6172445502089479,
+  "qwk": 0.7676161688709482,
   "adjacent": {
     "n": 413,
     "exact": 0.6271186440677966,
-    "adjacent_error": 0.26150121065375304,
-    "far_error": 0.11138014527845036,
-    "mean_abs_error": 0.5012106537530266
+    "adjacent_error": 0.29055690072639223,
+    "far_error": 0.08232445520581114,
+    "mean_abs_error": 0.4721549636803874
   },
-  "classification_report": "                  precision    recall  f1-score   support\n\n           No_DR       0.92      0.93      0.92       150\n            Mild       0.32      0.32      0.32        56\n        Moderate       0.53      0.68      0.59       135\n          Severe       0.32      0.36      0.34        28\nProliferative_DR       0.00      0.00      0.00        44\n\n        accuracy                           0.63       413\n       macro avg       0.42      0.46      0.44       413\n    weighted avg       0.57      0.63      0.60       413\n"
+  "classification_report": "                  precision    recall  f1-score   support\n\n           No_DR       0.94      0.92      0.93       150\n            Mild       0.43      0.66      0.52        56\n        Moderate       0.64      0.50      0.56       135\n          Severe       0.21      0.57      0.31        28\nProliferative_DR       1.00      0.02      0.04        44\n\n        accuracy                           0.63       413\n       macro avg       0.65      0.53      0.47       413\n    weighted avg       0.73      0.63      0.62       413\n"
 }
