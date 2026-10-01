@@ -43,6 +43,8 @@ class Config:
     freeze_bn_on_finetune: bool = True
     label_smoothing: float = 0.1  # Softmax only
     qwk_each_epoch: bool = False  # True on GPU; full-val predict is slow on CPU
+    # val_loss keeps the stable recipe. train_accuracy.py sets val_accuracy.
+    checkpoint_monitor: str = "val_loss"
 
     # Kaggle dataset
     kaggle_dataset: str = "sachinkumar413/diabetic-retinopathy-dataset"

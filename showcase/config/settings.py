@@ -7,6 +7,17 @@ PROJECT_ROOT = BASE_DIR.parent
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-only-change-me")
 DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
 ALLOWED_HOSTS = [h for h in os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(",") if h]
+CSRF_TRUSTED_ORIGINS = [
+    origin
+    for origin in os.environ.get(
+        "DJANGO_CSRF_TRUSTED_ORIGINS",
+        "https://retina.udithsandaruwan.com",
+    ).split(",")
+    if origin
+]
+# Cloudflare terminates HTTPS and forwards to this app.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST = True
 
 INSTALLED_APPS = [
     "django.contrib.staticfiles",

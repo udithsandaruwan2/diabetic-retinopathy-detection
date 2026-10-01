@@ -1,9 +1,14 @@
 services:
   retina:
+    image: ghcr.io/udithsandaruwan2/diabetic-retinopathy-detection:latest
     build: .
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     environment:
       DJANGO_DEBUG: "0"
-      DJANGO_ALLOWED_HOSTS: "*"
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-retina.udithsandaruwan.com,localhost,127.0.0.1}
+      DJANGO_CSRF_TRUSTED_ORIGINS: ${DJANGO_CSRF_TRUSTED_ORIGINS:-https://retina.udithsandaruwan.com}
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-change-me-before-public-hosting}
+      TF_NUM_INTRAOP_THREADS: "1"
+      TF_NUM_INTEROP_THREADS: "1"
+    restart: unless-stopped

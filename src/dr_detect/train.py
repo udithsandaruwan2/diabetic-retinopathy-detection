@@ -15,6 +15,28 @@ from dr_detect.losses import coral_loss
 from dr_detect.models import coral_logits_to_label, freeze_batch_norm, set_fine_tune
 
 
+class ValOrdinalScore(callbacks.Callback):
+    """Decoded stage accuracy on the validation set. CORAL logits are not class probabilities."""
+
+    def __init__(self, val_seq):
+        super().__init__()
+        self.val_seq = val_seq
+
+    def on_epoch_end(self, epoch, logs=None):
+        logs = logs or {}
+        correct = 0
+        total = 0
+        for i in range(len(self.val_seq)):
+            x, y = self.val_seq[i]
+            pred = coral_logits_to_label(self.model.predict(x, verbose=0))
+            true = y.sum(axis=-1).astype(int)
+            correct += int((pred == true).sum())
+            total += int(true.shape[0])
+        acc = float(correct / max(total, 1))
+        logs["val_accuracy"] = acc
+        print(f" — val_accuracy: {acc:.4f}")
+
+
 class QWKCallback(callbacks.Callback):
     """Compute quadratic weighted kappa on a validation Sequence each epoch."""
 
@@ -56,25 +78,32 @@ def make_callbacks(
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     ckpt = out_dir / ("best_coral.keras" if coral else "best_softmax.keras")
+    monitor = cfg.checkpoint_monitor
+    mode = "max" if monitor == "val_accuracy" else "min"
     cbs = [
         callbacks.EarlyStopping(
-            monitor="val_loss",
+            monitor=monitor,
+            mode=mode,
             patience=cfg.early_stop_patience,
             restore_best_weights=True,
         ),
         callbacks.ReduceLROnPlateau(
-            monitor="val_loss",
+            monitor=monitor,
+            mode=mode,
             factor=cfg.reduce_lr_factor,
             patience=cfg.reduce_lr_patience,
             min_lr=1e-7,
         ),
         callbacks.ModelCheckpoint(
             filepath=str(ckpt),
-            monitor="val_loss",
+            monitor=monitor,
+            mode=mode,
             save_best_only=True,
         ),
         callbacks.CSVLogger(str(out_dir / "history.csv")),
     ]
+    if coral and monitor == "val_accuracy":
+        cbs.insert(0, ValOrdinalScore(val_seq))
     if cfg.qwk_each_epoch:
         cbs.insert(0, QWKCallback(val_seq, coral=coral))
     return cbs
@@ -114,36 +143,45 @@ def compile_coral(model, lr: float, cfg: Config = CFG):
     return model
 
 
-def _best_val_loss_from_csv(history_csv: Path) -> float | None:
+def _best_from_csv(history_csv: Path, column: str, higher_is_better: bool) -> float | None:
     if not history_csv.exists():
         return None
     try:
         import pandas as pd
 
         df = pd.read_csv(history_csv)
-        if "val_loss" not in df.columns or df.empty:
+        if column not in df.columns or df.empty:
             return None
-        return float(df["val_loss"].min())
+        series = df[column].dropna()
+        if series.empty:
+            return None
+        return float(series.max() if higher_is_better else series.min())
     except Exception:
         return None
 
 
-def _pick_best_checkpoint(out_dir: Path, coral: bool) -> tuple[Path | None, float | None, str]:
-    """Return (checkpoint_path, best_val_loss, phase_name) across phase1/phase2."""
+def _pick_best_checkpoint(
+    out_dir: Path,
+    coral: bool,
+    monitor: str = "val_loss",
+) -> tuple[Path | None, float | None, str]:
+    """Return (checkpoint_path, best_metric, phase_name) across phase1/phase2."""
     name = "best_coral.keras" if coral else "best_softmax.keras"
+    higher = monitor == "val_accuracy"
     best_path: Path | None = None
-    best_loss: float | None = None
+    best_value: float | None = None
     best_phase = ""
     for phase in ("phase1", "phase2"):
         ckpt = out_dir / phase / name
-        vl = _best_val_loss_from_csv(out_dir / phase / "history.csv")
-        if not ckpt.exists() or vl is None:
+        value = _best_from_csv(out_dir / phase / "history.csv", monitor, higher)
+        if not ckpt.exists() or value is None:
             continue
-        if best_loss is None or vl < best_loss:
-            best_loss = vl
+        better = best_value is None or (value > best_value if higher else value < best_value)
+        if better:
+            best_value = value
             best_path = ckpt
             best_phase = phase
-    return best_path, best_loss, best_phase
+    return best_path, best_value, best_phase
 
 
 def two_phase_train(
@@ -203,7 +241,9 @@ def two_phase_train(
     history["phase_boundary"] = p1_epochs
 
     # Deploy the better of phase1 vs phase2 checkpoints (never last crashed epoch)
-    best_ckpt, best_vl, best_phase = _pick_best_checkpoint(out_dir, coral=coral)
+    best_ckpt, best_value, best_phase = _pick_best_checkpoint(
+        out_dir, coral=coral, monitor=cfg.checkpoint_monitor
+    )
     final_path = out_dir / ("coral_final.keras" if coral else "softmax_final.keras")
     custom = {"coral_loss": coral_loss} if coral else None
     if best_ckpt is not None:
@@ -212,11 +252,12 @@ def two_phase_train(
         model = best_model
         meta = {
             "selected_phase": best_phase,
-            "best_val_loss": best_vl,
+            "monitor": cfg.checkpoint_monitor,
+            "best_value": best_value,
             "checkpoint": str(best_ckpt),
         }
         (out_dir / "best_selection.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
-        print(f"Selected {best_phase} checkpoint (val_loss={best_vl:.4f}) → {final_path}")
+        print(f"Selected {best_phase} checkpoint ({cfg.checkpoint_monitor}={best_value:.4f}) → {final_path}")
     else:
         model.save(final_path)
         print(f"No phase checkpoints found; saved current weights → {final_path}")

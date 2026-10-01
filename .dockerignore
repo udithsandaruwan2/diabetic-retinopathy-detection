@@ -1,11 +1,13 @@
 .venv
 .git
-data/raw
-data/processed
+data
 Notes
 notebooks
 artifacts
 docs
+models/*
+!models/best_model.keras
+!models/meta.json
 **/__pycache__
 **/*.pyc
 showcase/db.sqlite3

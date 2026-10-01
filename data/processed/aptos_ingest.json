@@ -1,0 +1,15 @@
+{
+  "source": "sovitrath/diabetic-retinopathy-224x224-2019-data",
+  "found": 3662,
+  "kept": 2538,
+  "dropped_duplicates": 1124,
+  "unreadable": 0,
+  "by_label": {
+    "No_DR": 1183,
+    "Moderate": 673,
+    "Mild": 307,
+    "Proliferative_DR": 228,
+    "Severe": 147
+  },
+  "csv": "/home/neon-cultivator/us/diabetic-retinopathy-detection/data/processed/extra_train.csv"
+}

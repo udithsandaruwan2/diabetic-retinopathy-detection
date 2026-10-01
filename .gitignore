@@ -224,9 +224,14 @@ models/*.h5
 models/*.onnx
 !models/best_model.keras
 
+artifacts/**/*.keras
+data/raw/
+data/external/
+
 # Coursework submission pack stays on this machine
 /CW final docs/
 
+.env
 .kaggle/
 *.zip
 .DS_Store

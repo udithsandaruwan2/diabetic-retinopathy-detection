@@ -132,7 +132,7 @@ def screen_image(bgr: np.ndarray) -> dict:
     x = preprocess_fundus(bgr, is_bgr=True, for_model=True)[None, ...].astype(np.float32)
     raw = model.predict(x, verbose=0)
     if coral:
-        grade = int(coral_logits_to_label(raw)[0])
+        grade = int(coral_logits_to_label(raw, threshold=float(meta.get("coral_threshold", 0.5)))[0])
         level_probs = (1.0 / (1.0 + np.exp(-raw[0]))).astype(float).tolist()
         confidence = float(np.mean(np.abs(np.array(level_probs) - 0.5) * 2))
     else:

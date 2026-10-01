@@ -110,8 +110,8 @@ blockquote {
 <h1 id="diabetic-retinopathy-stage-screening-product-guide">Diabetic Retinopathy Stage Screening — Product Guide</h1>
 <p><strong>Audience:</strong> product owners, engineers, and operators who need the full story of this system.<br />
 <strong>Not a coursework report</strong> — this is the production-oriented product bible.<br />
-<strong>Status:</strong> EXP-ACC-001 export (2026-09-29). Test split never used for training.<br />
-<strong>Deployed winner:</strong> CORAL · test Acc <strong>0.627</strong> · QWK <strong>0.768</strong> · <code>models/best_model.keras</code></p>
+<strong>Status:</strong> EXP-ACC-070 export (2026-10-01). Test split never used for training.<br />
+<strong>Deployed winner:</strong> CORAL · test Acc <strong>0.651</strong> · QWK <strong>0.738</strong> · threshold <strong>0.525</strong> · <code>models/best_model.keras</code></p>
 <hr />
 <h2 id="table-of-contents">Table of contents</h2>
 <ol>
@@ -337,6 +337,44 @@ scripts/                  ← CLI: download, train, evaluate, data sanity, diagr
 </table>
 <p><strong>Train class counts:</strong> No_DR 699 · Mild 259 · Moderate 630 · Severe 133 · Proliferative_DR 203.</p>
 <p>Severe is the scarcest class (~7% of train) — the main imbalance driver.</p>
+<h3 id="extra-training-images-exp-acc-070">Extra training images (EXP-ACC-070)</h3>
+<p>APTOS 2019 at 224 px (<code>sovitrath/diabetic-retinopathy-224x224-2019-data</code>) was added to the <strong>training split only</strong>. File-hash and 16×16 average-hash checks dropped any photo already in train, validation, or test.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align: right;">N</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>APTOS images found</td>
+<td style="text-align: right;">3662</td>
+</tr>
+<tr>
+<td>Duplicates dropped</td>
+<td style="text-align: right;">1124</td>
+</tr>
+<tr>
+<td>Extra train rows kept</td>
+<td style="text-align: right;">2538</td>
+</tr>
+<tr>
+<td>Pooled train before oversample</td>
+<td style="text-align: right;">4462</td>
+</tr>
+<tr>
+<td>Validation (unchanged)</td>
+<td style="text-align: right;">413</td>
+</tr>
+<tr>
+<td>Test (unchanged)</td>
+<td style="text-align: right;">413</td>
+</tr>
+</tbody>
+</table>
+<p>Extra rows by stage: No_DR 1183 · Mild 307 · Moderate 673 · Severe 147 · Proliferative_DR 228.</p>
+<p>Pooled train before oversample: No_DR 1882 · Mild 566 · Moderate 1303 · Severe 280 · Proliferative_DR 431. Mild, Severe, and Proliferative were then duplicated up to 1882 rows each, so the fit table has <strong>8831</strong> rows. Class weights were not used on this run.</p>
 <p><img alt="Class distribution" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/class_distribution.png" /></p>
 <p><img alt="Split counts" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/split_counts.png" /></p>
 <p><img alt="Sample gallery" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/sample_gallery.png" /></p>
@@ -452,7 +490,7 @@ scripts/                  ← CLI: download, train, evaluate, data sanity, diagr
 </tr>
 </tbody>
 </table>
-<p>Softmax training uses these weights. CORAL uses cumulative multi-label levels (ordinal structure carries its own balance dynamics).</p>
+<p>Softmax training in the earlier scripts uses these weights. The deployed EXP-ACC-070 run did not. It balanced the pooled training rows by duplication only.</p>
 <hr />
 <h2 id="7-model-concepts">7. Model concepts</h2>
 <p><img alt="Softmax architecture" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/diagram_softmax.png" /></p>
@@ -463,12 +501,13 @@ scripts/                  ← CLI: download, train, evaluate, data sanity, diagr
 <li>Chosen for local RAM (~7 GB) and CPU inference; B3 remains a GPU stretch goal (see roadmap).</li>
 </ul>
 <h3 id="softmax-head">Softmax head</h3>
-<pre><code class="language-text">EfficientNetB0 → GlobalAveragePooling2D → Dropout(0.3) → Dense(5, softmax)
+<pre><code class="language-text">EfficientNetB0 → GlobalAveragePooling2D → Dense(512) → Dropout(0.3) → Dense(256) → Dropout(0.3) → Dense(5, softmax)
 </code></pre>
-<p>Loss: sparse categorical cross-entropy (+ class weights).</p>
+<p>The deployed EXP-ACC-070 run used this head with label smoothing off and no class weights.</p>
 <h3 id="coral-ordinal-head">CORAL ordinal head</h3>
-<pre><code class="language-text">EfficientNetB0 → GAP → Dropout(0.3) → Dense(4, linear)   # logits for P(y&gt;k), k=0..3
+<pre><code class="language-text">EfficientNetB0 → GAP → Dense(512) → Dropout(0.3) → Dense(256) → Dropout(0.3) → Dense(4, linear)
 </code></pre>
+<p>The four logits are cumulative thresholds. The deployed cutoff is 0.525, chosen on the validation set.</p>
 <ul>
 <li>Loss: binary cross-entropy on cumulative levels (CORAL loss).</li>
 <li>Decode: sigmoid → count how many thresholds fire → integer grade 0–4.</li>
@@ -569,7 +608,7 @@ uv run streamlit run app/streamlit_app.py
 <p>Package code lives under <code>src/dr_detect/</code> — scripts are thin wrappers.</p>
 <hr />
 <h2 id="9-results">9. Results</h2>
-<p>Held-out <strong>test set N = 413</strong> (never used for training or early stopping). Metrics from <code>models/meta.json</code> after <strong>EXP-ACC-001</strong> (richer head, train-only Mild/Severe oversample, Softmax label smoothing 0.1, horizontal-flip test-time average).</p>
+<p>Held-out <strong>test set N = 413</strong> (never used for training or early stopping). Metrics from <code>models/meta.json</code> after <strong>EXP-ACC-070</strong> (APTOS extra train, label smoothing off, last 30 non-batch-norm layers, up to 12 epochs per phase, checkpoint by validation accuracy, CORAL threshold 0.525 chosen on validation, horizontal-flip test-time average). Trained on a Colab GPU.</p>
 <h3 id="headline-comparison">Headline comparison</h3>
 <table>
 <thead>
@@ -584,21 +623,21 @@ uv run streamlit run app/streamlit_app.py
 <tbody>
 <tr>
 <td>Softmax</td>
-<td style="text-align: right;">0.511</td>
-<td style="text-align: right;">0.360</td>
-<td style="text-align: right;">0.450</td>
-<td style="text-align: right;">0.657</td>
+<td style="text-align: right;">0.625</td>
+<td style="text-align: right;">0.532</td>
+<td style="text-align: right;">0.625</td>
+<td style="text-align: right;">0.724</td>
 </tr>
 <tr>
 <td><strong>CORAL (winner)</strong></td>
-<td style="text-align: right;"><strong>0.627</strong></td>
-<td style="text-align: right;">0.473</td>
-<td style="text-align: right;">0.617</td>
-<td style="text-align: right;"><strong>0.768</strong></td>
+<td style="text-align: right;"><strong>0.651</strong></td>
+<td style="text-align: right;">0.508</td>
+<td style="text-align: right;">0.636</td>
+<td style="text-align: right;"><strong>0.738</strong></td>
 </tr>
 </tbody>
 </table>
-<p>Prior stable thin-head run: Softmax Acc 0.625 / QWK 0.713; CORAL Acc 0.627 / QWK 0.719. EXP-ACC-001 kept CORAL accuracy and raised QWK past 0.75. Softmax got worse on this split, so it is not deployed.</p>
+<p>The previous deployed CORAL model (EXP-ACC-001) was Acc 0.627 / QWK 0.768. This run raised exact accuracy and lowered kappa. Softmax recovered from 0.511 to 0.625. CORAL is still the deployed head because exact accuracy is higher. 70% exact accuracy was not reached (269 of 413).</p>
 <p><img alt="Softmax vs CORAL" src="file:///home/neon-cultivator/us/diabetic-retinopathy-detection/docs/figures/softmax_vs_coral.png" /></p>
 <h3 id="error-structure-adjacent-vs-far">Error structure (adjacent vs far)</h3>
 <table>
@@ -614,21 +653,21 @@ uv run streamlit run app/streamlit_app.py
 <tbody>
 <tr>
 <td>Softmax</td>
-<td style="text-align: right;">0.511</td>
-<td style="text-align: right;">0.392</td>
-<td style="text-align: right;">0.097</td>
-<td style="text-align: right;">0.644</td>
+<td style="text-align: right;">0.625</td>
+<td style="text-align: right;">0.223</td>
+<td style="text-align: right;">0.153</td>
+<td style="text-align: right;">0.564</td>
 </tr>
 <tr>
 <td>CORAL</td>
-<td style="text-align: right;">0.627</td>
-<td style="text-align: right;">0.291</td>
-<td style="text-align: right;"><strong>0.082</strong></td>
+<td style="text-align: right;">0.651</td>
+<td style="text-align: right;">0.249</td>
+<td style="text-align: right;"><strong>0.099</strong></td>
 <td style="text-align: right;"><strong>0.472</strong></td>
 </tr>
 </tbody>
 </table>
-<p>CORAL’s far-error rate fell from 0.111 (stable run) to <strong>0.082</strong>. Proliferative recall on the test report is only 0.02 (1 of 44) — still the weak class.</p>
+<p>CORAL far-error is <strong>0.099</strong> (it was 0.082 on EXP-ACC-001). Proliferative recall on the test report is <strong>0.07</strong> — still too low for unsupervised screening.</p>
 <h3 id="phase-2-stability">Phase-2 stability</h3>
 <p>Train-loss change from the last Phase-1 epoch to the first Phase-2 epoch: Softmax about <strong>+3.6%</strong>, CORAL about <strong>−0.8%</strong>. Both stay under the 20% spike limit.</p>
 <h3 id="confusion-matrices-and-curves">Confusion matrices and curves</h3>
@@ -678,8 +717,8 @@ uv run streamlit run app/streamlit_app.py
 </thead>
 <tbody>
 <tr>
-<td>CPU-short schedule (8+8 with early stop)</td>
-<td>Not fully converged vs notes’ longer GPU recipes</td>
+<td>Colab GPU schedule (up to 12+12, early stop on validation accuracy)</td>
+<td>Still short of a 70% exact-match target</td>
 </tr>
 <tr>
 <td>Severe / Proliferative scarcity</td>
@@ -724,13 +763,13 @@ uv run streamlit run app/streamlit_app.py
 </tr>
 <tr>
 <td style="text-align: right;">P0</td>
-<td>Rare-class oversampling of Mild and Severe on the <strong>train</strong> split only</td>
-<td><strong>Done</strong> (each matched the majority count, 699)</td>
+<td>Rare-class oversampling of Mild, Severe, and Proliferative on the <strong>pooled train</strong> split only</td>
+<td><strong>Done</strong> (each matched the majority count, 1882; fit rows 8831)</td>
 </tr>
 <tr>
 <td style="text-align: right;">P1</td>
 <td>Softmax label smoothing 0.1</td>
-<td><strong>Done</strong> (did not improve Softmax test metrics)</td>
+<td>Tried in EXP-ACC-001, <strong>off</strong> in EXP-ACC-070</td>
 </tr>
 <tr>
 <td style="text-align: right;">P1</td>
@@ -739,18 +778,23 @@ uv run streamlit run app/streamlit_app.py
 </tr>
 <tr>
 <td style="text-align: right;">P1</td>
-<td>Longer BN-safe schedule (e.g. 15+15)</td>
-<td>Future</td>
+<td>Longer BN-safe schedule (12+12 on Colab GPU)</td>
+<td><strong>Done</strong></td>
 </tr>
 <tr>
 <td style="text-align: right;">P2</td>
-<td>Select checkpoints by val QWK</td>
-<td>Future</td>
+<td>Select checkpoints by validation accuracy</td>
+<td><strong>Done</strong> in EXP-ACC-070</td>
 </tr>
 <tr>
 <td style="text-align: right;">P2</td>
 <td>Unfreeze last 30 non-BN layers</td>
-<td>Future</td>
+<td><strong>Done</strong></td>
+</tr>
+<tr>
+<td style="text-align: right;">P2</td>
+<td>Deduplicated APTOS 2019 images added to train only</td>
+<td><strong>Done</strong> (2538 kept, 1124 duplicates dropped)</td>
 </tr>
 <tr>
 <td style="text-align: right;">P3</td>
@@ -759,7 +803,7 @@ uv run streamlit run app/streamlit_app.py
 </tr>
 <tr>
 <td style="text-align: right;">P3</td>
-<td>External validation (Messidor-2 / full APTOS)</td>
+<td>External test on Messidor-2 or a held-out EyePACS subset</td>
 <td>Future</td>
 </tr>
 <tr>
@@ -772,8 +816,8 @@ uv run streamlit run app/streamlit_app.py
 <h3 id="what-exp-acc-001-met">What EXP-ACC-001 met</h3>
 <ol>
 <li>Phase-2 train-loss spike stayed under 20% (Softmax +3.6%, CORAL −0.8%).</li>
-<li>CORAL test QWK <strong>0.768</strong> (≥ 0.75) and far-error fell to 0.082.</li>
-<li>Proliferative recall is non-zero but tiny (0.02).</li>
+<li>EXP-ACC-070 CORAL test accuracy <strong>0.651</strong> (was 0.627) and QWK <strong>0.738</strong> (was 0.768). Far-error is 0.099.</li>
+<li>Proliferative recall is still low (0.07).</li>
 <li>Same <code>data/processed/*.csv</code> splits. Test images were not added to training.</li>
 </ol>
 <hr />
@@ -898,6 +942,6 @@ uv run streamlit run app/streamlit_app.py
 </tbody>
 </table>
 <hr />
-<p><em>Document version: 2026-09-29 · Metrics from EXP-ACC-001 · Test split held out · B3 and external validation still future.</em></p>
+<p><em>Document version: 2026-10-01 · Metrics from EXP-ACC-070 · Test split held out · 70% exact accuracy not reached · B3 and an external test set still future.</em></p>
 </body>
 </html>

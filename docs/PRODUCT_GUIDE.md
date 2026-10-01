@@ -2,8 +2,8 @@
 
 **Audience:** product owners, engineers, and operators who need the full story of this system.  
 **Not a coursework report** — this is the production-oriented product bible.  
-**Status:** EXP-ACC-001 export (2026-09-29). Test split never used for training.  
-**Deployed winner:** CORAL · test Acc **0.627** · QWK **0.768** · `models/best_model.keras`
+**Status:** EXP-ACC-070 export (2026-10-01). Test split never used for training.  
+**Deployed winner:** CORAL · test Acc **0.651** · QWK **0.738** · threshold **0.525** · `models/best_model.keras`
 
 ---
 
@@ -154,6 +154,23 @@ Chosen for a complete multi-class download on constrained local hardware, five e
 
 Severe is the scarcest class (~7% of train) — the main imbalance driver.
 
+### Extra training images (EXP-ACC-070)
+
+APTOS 2019 at 224 px (`sovitrath/diabetic-retinopathy-224x224-2019-data`) was added to the **training split only**. File-hash and 16×16 average-hash checks dropped any photo already in train, validation, or test.
+
+| | N |
+|--|--:|
+| APTOS images found | 3662 |
+| Duplicates dropped | 1124 |
+| Extra train rows kept | 2538 |
+| Pooled train before oversample | 4462 |
+| Validation (unchanged) | 413 |
+| Test (unchanged) | 413 |
+
+Extra rows by stage: No_DR 1183 · Mild 307 · Moderate 673 · Severe 147 · Proliferative_DR 228.
+
+Pooled train before oversample: No_DR 1882 · Mild 566 · Moderate 1303 · Severe 280 · Proliferative_DR 431. Mild, Severe, and Proliferative were then duplicated up to 1882 rows each, so the fit table has **8831** rows. Class weights were not used on this run.
+
 ![Class distribution](figures/class_distribution.png)
 
 ![Split counts](figures/split_counts.png)
@@ -221,7 +238,7 @@ Typical transforms (see `src/dr_detect/augment.py`): horizontal flip, small rota
 | 3 Severe | 2.89 |
 | 4 Proliferative | 1.90 |
 
-Softmax training uses these weights. CORAL uses cumulative multi-label levels (ordinal structure carries its own balance dynamics).
+Softmax training in the earlier scripts uses these weights. The deployed EXP-ACC-070 run did not. It balanced the pooled training rows by duplication only.
 
 ---
 
@@ -239,16 +256,18 @@ Softmax training uses these weights. CORAL uses cumulative multi-label levels (o
 ### Softmax head
 
 ```text
-EfficientNetB0 → GlobalAveragePooling2D → Dropout(0.3) → Dense(5, softmax)
+EfficientNetB0 → GlobalAveragePooling2D → Dense(512) → Dropout(0.3) → Dense(256) → Dropout(0.3) → Dense(5, softmax)
 ```
 
-Loss: sparse categorical cross-entropy (+ class weights).
+The deployed EXP-ACC-070 run used this head with label smoothing off and no class weights.
 
 ### CORAL ordinal head
 
 ```text
-EfficientNetB0 → GAP → Dropout(0.3) → Dense(4, linear)   # logits for P(y>k), k=0..3
+EfficientNetB0 → GAP → Dense(512) → Dropout(0.3) → Dense(256) → Dropout(0.3) → Dense(4, linear)
 ```
+
+The four logits are cumulative thresholds. The deployed cutoff is 0.525, chosen on the validation set.
 
 - Loss: binary cross-entropy on cumulative levels (CORAL loss).
 - Decode: sigmoid → count how many thresholds fire → integer grade 0–4.
@@ -330,16 +349,16 @@ Package code lives under `src/dr_detect/` — scripts are thin wrappers.
 
 ## 9. Results
 
-Held-out **test set N = 413** (never used for training or early stopping). Metrics from `models/meta.json` after **EXP-ACC-001** (richer head, train-only Mild/Severe oversample, Softmax label smoothing 0.1, horizontal-flip test-time average).
+Held-out **test set N = 413** (never used for training or early stopping). Metrics from `models/meta.json` after **EXP-ACC-070** (APTOS extra train, label smoothing off, last 30 non-batch-norm layers, up to 12 epochs per phase, checkpoint by validation accuracy, CORAL threshold 0.525 chosen on validation, horizontal-flip test-time average). Trained on a Colab GPU.
 
 ### Headline comparison
 
 | Model | Accuracy | Macro-F1 | Weighted-F1 | **QWK** |
 |-------|---------:|---------:|------------:|--------:|
-| Softmax | 0.511 | 0.360 | 0.450 | 0.657 |
-| **CORAL (winner)** | **0.627** | 0.473 | 0.617 | **0.768** |
+| Softmax | 0.625 | 0.532 | 0.625 | 0.724 |
+| **CORAL (winner)** | **0.651** | 0.508 | 0.636 | **0.738** |
 
-Prior stable thin-head run: Softmax Acc 0.625 / QWK 0.713; CORAL Acc 0.627 / QWK 0.719. EXP-ACC-001 kept CORAL accuracy and raised QWK past 0.75. Softmax got worse on this split, so it is not deployed.
+The previous deployed CORAL model (EXP-ACC-001) was Acc 0.627 / QWK 0.768. This run raised exact accuracy and lowered kappa. Softmax recovered from 0.511 to 0.625. CORAL is still the deployed head because exact accuracy is higher. 70% exact accuracy was not reached (269 of 413).
 
 ![Softmax vs CORAL](figures/softmax_vs_coral.png)
 
@@ -347,10 +366,10 @@ Prior stable thin-head run: Softmax Acc 0.625 / QWK 0.713; CORAL Acc 0.627 / QWK
 
 | Model | Exact | Adjacent (±1) | Far (≥2) | Mean abs error |
 |-------|------:|--------------:|---------:|---------------:|
-| Softmax | 0.511 | 0.392 | 0.097 | 0.644 |
-| CORAL | 0.627 | 0.291 | **0.082** | **0.472** |
+| Softmax | 0.625 | 0.223 | 0.153 | 0.564 |
+| CORAL | 0.651 | 0.249 | **0.099** | **0.472** |
 
-CORAL’s far-error rate fell from 0.111 (stable run) to **0.082**. Proliferative recall on the test report is only 0.02 (1 of 44) — still the weak class.
+CORAL far-error is **0.099** (it was 0.082 on EXP-ACC-001). Proliferative recall on the test report is **0.07** — still too low for unsupervised screening.
 
 ### Phase-2 stability
 
@@ -415,7 +434,7 @@ Any future model swap must:
 
 | Limitation | Impact |
 |------------|--------|
-| CPU-short schedule (8+8 with early stop) | Not fully converged vs notes’ longer GPU recipes |
+| Colab GPU schedule (up to 12+12, early stop on validation accuracy) | Still short of a 70% exact-match target |
 | Severe / Proliferative scarcity | Weaker recall on rare high-risk grades |
 | No patient-level split IDs | Possible correlated eyes across splits |
 | Camera / clinic domain shift | Metrics may drop on external cameras |
@@ -435,21 +454,22 @@ EXP-ACC-001 trained the items marked **done** below. The test CSV stayed held ou
 | Priority | Change | Status |
 |---------:|--------|--------|
 | P0 | Richer head: GAP → Dense(512) → Dropout → Dense(256) → Dropout → output | **Done** (both heads) |
-| P0 | Rare-class oversampling of Mild and Severe on the **train** split only | **Done** (each matched the majority count, 699) |
-| P1 | Softmax label smoothing 0.1 | **Done** (did not improve Softmax test metrics) |
+| P0 | Rare-class oversampling of Mild, Severe, and Proliferative on the **pooled train** split only | **Done** (each matched the majority count, 1882; fit rows 8831) |
+| P1 | Softmax label smoothing 0.1 | Tried in EXP-ACC-001, **off** in EXP-ACC-070 |
 | P1 | Horizontal-flip average at evaluation | **Done** |
-| P1 | Longer BN-safe schedule (e.g. 15+15) | Future |
-| P2 | Select checkpoints by val QWK | Future |
-| P2 | Unfreeze last 30 non-BN layers | Future |
+| P1 | Longer BN-safe schedule (12+12 on Colab GPU) | **Done** |
+| P2 | Select checkpoints by validation accuracy | **Done** in EXP-ACC-070 |
+| P2 | Unfreeze last 30 non-BN layers | **Done** |
+| P2 | Deduplicated APTOS 2019 images added to train only | **Done** (2538 kept, 1124 duplicates dropped) |
 | P3 | EfficientNetB3 on a GPU | Future |
-| P3 | External validation (Messidor-2 / full APTOS) | Future |
+| P3 | External test on Messidor-2 or a held-out EyePACS subset | Future |
 | P3 | Softmax and CORAL ensemble | Future |
 
 ### What EXP-ACC-001 met
 
 1. Phase-2 train-loss spike stayed under 20% (Softmax +3.6%, CORAL −0.8%).
-2. CORAL test QWK **0.768** (≥ 0.75) and far-error fell to 0.082.
-3. Proliferative recall is non-zero but tiny (0.02).
+2. EXP-ACC-070 CORAL test accuracy **0.651** (was 0.627) and QWK **0.738** (was 0.768). Far-error is 0.099.
+3. Proliferative recall is still low (0.07).
 4. Same `data/processed/*.csv` splits. Test images were not added to training.
 
 ---
@@ -520,4 +540,4 @@ uv run python scripts/export_product_guide.py
 
 ---
 
-*Document version: 2026-09-29 · Metrics from EXP-ACC-001 · Test split held out · B3 and external validation still future.*
+*Document version: 2026-10-01 · Metrics from EXP-ACC-070 · Test split held out · 70% exact accuracy not reached · B3 and an external test set still future.*

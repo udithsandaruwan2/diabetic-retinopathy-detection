@@ -157,3 +157,14 @@ _(Training runs appended below as they complete.)_
 - Winner: **coral** (QWK=0.7676)
 - meta: `models/meta.json`
 - Results: `{"softmax": {"accuracy": 0.5108958837772397, "precision_macro": 0.4353369963369963, "recall_macro": 0.5120952380952382, "f1_macro": 0.3604546221744557, "precision_weighted": 0.6308429343054041, "recall_weighted": 0.5108958837772397, "f1_weighted": 0.45007318371928323, "qwk": 0.6571890181314222, "adjacent": {"n": 413, "exact": 0.5108958837772397, "adjacent_error": 0.3922518159806295, "far_error": 0.09685230024213075, "mean_abs_error": 0.6440677966101694}}, "coral": {"accuracy": 0.6271186440677966, "precision_macro": 0.6453144341815438, "recall_macro": 0.5342332852332853, "f1_macro": 0.4732426404036369, "precision_weighted": 0.7308809611765459, "recall_weighted": 0.6271186440677966, "f1_weighted": 0.6172445502089479, "qwk": 0.7676161688709482, "adjacent": {"n": 413, "exact": 0.6271186440677966, "adjacent_error": 0.29055690072639223, "far_error": 0.08232445520581114, "mean_abs_error": 0.4721549636803874}}}`
+
+## EXP-ACC-070 — APTOS extra train, Colab GPU
+
+- Extra train: `sovitrath/diabetic-retinopathy-224x224-2019-data`. Found 3662, kept 2538, dropped 1124 duplicates of the locked split. Val 413 and test 413 unchanged.
+- Pooled train 4462 rows. Oversampled Mild, Severe, and Proliferative to 1882 each (8831 fit rows). No class weights. Label smoothing off.
+- Up to 12 epochs per phase, last 30 non-BN layers, early stop on validation accuracy. CORAL threshold 0.525 chosen on validation. Horizontal-flip average at test.
+- Previous deployed accuracy 0.627. Colab `meta.json` recorded previous as 0.0 because the old meta file was not on that machine. The local deploy check is 0.651 > 0.627, so the winner is installed.
+- Softmax accuracy 0.6247, QWK 0.7245, far-error 0.1525.
+- CORAL accuracy 0.6513, QWK 0.7380, far-error 0.0993, MAE 0.472, threshold 0.525.
+- Deployed: yes. Winner: coral. Report: `artifacts/experiments/acc70_report.json`.
+- 70% exact accuracy (289/413) was not reached (269/413).
