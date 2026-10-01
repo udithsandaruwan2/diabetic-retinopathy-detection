@@ -9,6 +9,8 @@ services:
       DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-retina.udithsandaruwan.com,localhost,127.0.0.1}
       DJANGO_CSRF_TRUSTED_ORIGINS: ${DJANGO_CSRF_TRUSTED_ORIGINS:-https://retina.udithsandaruwan.com}
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-change-me-before-public-hosting}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.1-flash-lite}
       TF_NUM_INTRAOP_THREADS: "1"
       TF_NUM_INTEROP_THREADS: "1"
     restart: unless-stopped

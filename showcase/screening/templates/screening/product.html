@@ -40,6 +40,18 @@
             <figure><img id="imgPrep" alt="Prepared retina" /><figcaption class="mono">Prepared</figcaption></figure>
             <figure><img id="imgCam" alt="Attention map" /><figcaption class="mono">Attention</figcaption></figure>
           </div>
+          <div id="note" class="note hidden">
+            <div class="mono">Generated note, not a diagnosis</div>
+            <p id="noteStage"></p>
+            <p id="noteScore"></p>
+            <p id="noteNext"></p>
+            <p id="noteLimit"></p>
+            <div id="chatLog" class="chat-log"></div>
+            <form id="chatForm" class="ask">
+              <input id="chatInput" type="text" maxlength="500" placeholder="Ask about this photograph" autocomplete="off" />
+              <button class="quiet" type="submit">Send</button>
+            </form>
+          </div>
         </div>
         <div style="margin-top: 22px; border-top: 1px solid var(--line); padding-top: 12px;">
           <div class="mono">Forward pass</div>
@@ -97,6 +109,7 @@
       if (!response.ok) throw new Error(body.error || "Request failed");
       show(body);
       statusEl.textContent = "Stage " + body.grade + " of 4. The trace below is this photograph.";
+      loadNote(body.reading_id);
     } catch (err) {
       statusEl.textContent = err.message;
     } finally {
@@ -119,6 +132,8 @@
     document.getElementById("imgRaw").src = body.images.original;
     document.getElementById("imgPrep").src = body.images.preprocessed;
     document.getElementById("imgCam").src = body.images.gradcam;
+    document.getElementById("chatLog").replaceChildren();
+    document.getElementById("chatInput").value = "";
     playStart = performance.now();
     if (!raf) raf = requestAnimationFrame(frame);
   }
@@ -200,5 +215,68 @@
     });
   }
   raf = requestAnimationFrame(frame);
+
+  function fillNote(note) {
+    document.getElementById("note").classList.remove("hidden");
+    document.getElementById("noteStage").textContent = note.stage_line || "";
+    document.getElementById("noteScore").textContent = note.score_line || "";
+    document.getElementById("noteNext").textContent = note.next_step || "";
+    document.getElementById("noteLimit").textContent = note.limit || "";
+  }
+
+  async function loadNote(readingId) {
+    fillNote({
+      stage_line: "Writing a note from this reading.",
+      score_line: "",
+      next_step: "",
+      limit: "",
+    });
+    const data = new FormData();
+    data.append("csrfmiddlewaretoken", csrf());
+    data.append("reading_id", readingId);
+    try {
+      const response = await fetch("/api/note", { method: "POST", body: data });
+      const body = await response.json();
+      if (!response.ok) throw new Error(body.error || "Note failed");
+      fillNote(body);
+    } catch (err) {
+      fillNote({
+        stage_line: "The written assistant is unavailable.",
+        score_line: "The stage above is unchanged.",
+        next_step: "",
+        limit: err.message,
+      });
+    }
+  }
+
+  document.getElementById("chatForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!payload || !payload.reading_id) return;
+    const input = document.getElementById("chatInput");
+    const message = input.value.trim();
+    if (!message) return;
+    input.value = "";
+    const log = document.getElementById("chatLog");
+    const mine = document.createElement("p");
+    mine.className = "you";
+    mine.textContent = message;
+    log.appendChild(mine);
+    const data = new FormData();
+    data.append("csrfmiddlewaretoken", csrf());
+    data.append("reading_id", payload.reading_id);
+    data.append("message", message);
+    try {
+      const response = await fetch("/api/chat", { method: "POST", body: data });
+      const body = await response.json();
+      if (!response.ok) throw new Error(body.error || "Chat failed");
+      const reply = document.createElement("p");
+      reply.textContent = body.reply;
+      log.appendChild(reply);
+    } catch (err) {
+      const reply = document.createElement("p");
+      reply.textContent = err.message;
+      log.appendChild(reply);
+    }
+  });
 </script>
 {% endblock %}

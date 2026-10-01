@@ -9,6 +9,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_GET, require_POST
 
 from dr_detect.config import CFG
+from screening.assistant import remember, reply, write_note
 from screening.inference import DISCLAIMER, screen_image
 
 DEVELOPER_URL = "https://udithsandaruwan.com"
@@ -55,4 +56,24 @@ def screen(request: HttpRequest):
         payload = screen_image(bgr)
     except Exception as exc:
         return JsonResponse({"error": str(exc)}, status=500)
+    payload["reading_id"] = remember(payload)
     return JsonResponse(payload)
+
+
+@require_POST
+def note(request: HttpRequest):
+    reading_id = request.POST.get("reading_id", "")
+    body = write_note(reading_id)
+    if body is None:
+        return JsonResponse({"error": "That reading has expired. Analyse the photograph again."}, status=404)
+    return JsonResponse(body)
+
+
+@require_POST
+def chat(request: HttpRequest):
+    reading_id = request.POST.get("reading_id", "")
+    message = request.POST.get("message", "")
+    body = reply(reading_id, message)
+    if body is None:
+        return JsonResponse({"error": "That reading has expired. Analyse the photograph again."}, status=404)
+    return JsonResponse(body)

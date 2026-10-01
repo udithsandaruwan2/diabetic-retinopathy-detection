@@ -34,14 +34,14 @@ jobs:
         uses: appleboy/ssh-action@v1.2.2
         env:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GHCR_USER: ${{ github.actor }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          envs: DJANGO_SECRET_KEY,GHCR_TOKEN,GHCR_USER
-          script_stop: true
+          envs: DJANGO_SECRET_KEY,GEMINI_API_KEY,GHCR_TOKEN,GHCR_USER
           script: |
             set -eu
             sudo mkdir -p /opt/retina
@@ -53,7 +53,7 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             umask 077
-            printf 'DJANGO_SECRET_KEY=%s\n' "$DJANGO_SECRET_KEY" > .env
+            printf 'DJANGO_SECRET_KEY=%s\nGEMINI_API_KEY=%s\nGEMINI_MODEL=gemini-3.1-flash-lite\n' "$DJANGO_SECRET_KEY" "$GEMINI_API_KEY" > .env
             echo "$GHCR_TOKEN" | sudo docker login ghcr.io -u "$GHCR_USER" --password-stdin
             sudo docker compose pull
             sudo docker compose up -d --remove-orphans

@@ -251,6 +251,22 @@
     .shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 18px; }
     .shots img { width: 100%; aspect-ratio: 1; object-fit: cover; background: #000; border-radius: 12px; display: block; border: 1px solid var(--line); }
     .shots figcaption { margin-top: 8px; }
+    .note { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+    .note p { margin: 8px 0 0; color: #d5e0ea; line-height: 1.55; font-size: 15px; }
+    .chat-log { margin: 12px 0; display: flex; flex-direction: column; gap: 8px; }
+    .chat-log p { margin: 0; }
+    .chat-log .you { color: var(--ink); }
+    .ask { display: flex; gap: 8px; }
+    .ask input {
+      flex: 1;
+      background: transparent;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--ink);
+      font: 15px "Outfit", "Avenir Next", sans-serif;
+      padding: 8px 0;
+    }
+    .ask input:focus { outline: none; border-bottom-color: #7ec8ff; }
     figure { margin: 0; }
     canvas { width: 100%; height: 260px; display: block; margin-top: 8px; border-radius: 12px; border: 1px solid var(--line); }
     .hidden { display: none; }
