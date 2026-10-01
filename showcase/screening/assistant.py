@@ -120,14 +120,20 @@ def _generate(client, **kwargs):
         models.append(FALLBACK_MODEL)
     last = None
     for model in models:
-        try:
-            return client.models.generate_content(model=model, **kwargs)
-        except Exception as exc:
-            last = exc
-            text = str(exc)
-            if any(token in text for token in ("503", "404", "UNAVAILABLE", "NOT_FOUND")):
-                continue
-            raise
+        for attempt in range(3):
+            try:
+                return client.models.generate_content(model=model, **kwargs)
+            except Exception as exc:
+                last = exc
+                text = str(exc)
+                busy = any(token in text for token in ("503", "UNAVAILABLE"))
+                missing = any(token in text for token in ("404", "NOT_FOUND"))
+                if busy and attempt < 2:
+                    time.sleep(1.5 * (attempt + 1))
+                    continue
+                if busy or missing:
+                    break
+                raise
     raise last
 
 
