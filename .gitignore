@@ -231,6 +231,9 @@ data/external/
 # Coursework submission pack stays on this machine
 /CW final docs/
 
+# Recording pack stays on this machine
+/video/
+
 .env
 .kaggle/
 *.zip

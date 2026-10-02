@@ -4,7 +4,7 @@
   <section class="desk">
     <div class="kicker">Product</div>
     <h1>Screen</h1>
-    <p class="lede">Upload a fundus photograph. The stage comes from the screening model. The map is that forward pass. The note only explains this photograph.</p>
+    <p class="lede">Upload a fundus photograph. The stage comes from the screening model. The map is that forward pass. The note explains the reading and can answer questions about the stages, the disease, and the project.</p>
     <div class="bench">
       <aside class="panel">
         <form id="form">
@@ -23,7 +23,7 @@
         <ul class="steps">
           <li><b>Stage</b>Set by the screening model, and left unchanged.</li>
           <li><b>Forward pass</b>Layers and the weights between them, lit by this frame.</li>
-          <li><b>Note</b>A written explanation of this photograph only.</li>
+          <li><b>Note</b>Explains this reading, and answers questions about the stages and the project.</li>
         </ul>
       </aside>
       <div class="panel brain">
@@ -75,11 +75,11 @@
           </dl>
         </section>
         <section class="panel thread">
-          <div class="mono">Ask about this photograph</div>
-          <p id="chatHint" class="hint">Questions stay on this photograph.</p>
+          <div class="mono">Ask a question</div>
+          <p id="chatHint" class="hint">Ask about this photograph, the five stages, or the project. It will not name medicines or doses.</p>
           <div id="chatLog" class="chat-log"></div>
           <form id="chatForm" class="ask">
-            <input id="chatInput" type="text" maxlength="500" placeholder="Ask about this reading" autocomplete="off" />
+            <input id="chatInput" type="text" maxlength="500" placeholder="Ask about this reading, a stage, or the project" autocomplete="off" />
             <button class="quiet" type="submit">Send</button>
           </form>
         </section>
@@ -364,7 +364,7 @@
     log.appendChild(mine);
     const pending = document.createElement("p");
     pending.className = "bubble ai think";
-    pending.innerHTML = MIND + "<span>Thinking about this photograph</span>";
+    pending.innerHTML = MIND + "<span>Thinking</span>";
     log.appendChild(pending);
     log.scrollTop = log.scrollHeight;
     const data = new FormData();
