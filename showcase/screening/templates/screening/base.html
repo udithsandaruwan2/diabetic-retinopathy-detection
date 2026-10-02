@@ -28,44 +28,47 @@
     }
     a { color: inherit; text-decoration: none; }
     .wrap { width: min(1160px, calc(100% - 40px)); margin: 0 auto; }
-    nav {
+    .bar {
       position: sticky;
       top: 0;
-      z-index: 4;
+      z-index: 20;
+      background: rgba(6, 8, 13, 0.9);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--line);
+    }
+    .bar-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 20px;
-      padding: 14px 0;
-      background: rgba(6, 8, 13, 0.72);
-      backdrop-filter: blur(16px);
+      height: 64px;
     }
     .brand {
       display: flex;
       align-items: center;
       gap: 10px;
-      font-family: "Outfit", "Avenir Next", "Segoe UI", sans-serif;
-      font-weight: 600;
-      font-size: 26px;
+      font-weight: 500;
+      font-size: 18px;
       letter-spacing: -0.03em;
     }
     .mark {
-      width: 22px;
-      height: 22px;
-      border-radius: 7px;
+      width: 16px;
+      height: 16px;
+      border-radius: 5px;
       border: 1px solid rgba(170, 210, 255, 0.55);
       background: radial-gradient(circle at 40% 40%, #d7ecff, #1a3d66 55%, #071018 80%);
-      box-shadow: 0 0 18px rgba(120, 180, 255, 0.35);
     }
-    .links { display: flex; align-items: center; gap: 22px; font-size: 14px; color: var(--muted); }
-    .links a.active { color: var(--ink); }
+    .links { display: flex; align-items: center; gap: 4px; font-size: 14px; color: var(--muted); }
+    .links a {
+      padding: 8px 12px;
+      border-radius: 999px;
+    }
+    .links a.active { color: var(--ink); background: rgba(255, 255, 255, 0.06); }
     .links a.go {
+      margin-left: 8px;
       color: #041018;
       background: linear-gradient(180deg, #f7fbff, #c5ddf5);
-      padding: 9px 14px;
-      border-radius: 999px;
-      font-weight: 600;
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.2), 0 10px 30px rgba(90, 150, 220, 0.25);
+      font-weight: 500;
     }
     .hero {
       display: grid;
@@ -75,8 +78,8 @@
       padding: 54px 0 28px;
     }
     @media (max-width: 900px) {
-      .hero, .flow, .desk-grid, .grid3 { grid-template-columns: 1fr !important; }
-      nav { flex-wrap: wrap; }
+      .hero, .flow, .desk-grid, .grid3, .bench, .assist { grid-template-columns: 1fr !important; }
+      .bar-inner { height: auto; padding: 12px 0; }
     }
     h1 {
       margin: 0;
@@ -220,19 +223,35 @@
       font-size: 13px;
     }
     footer a { color: var(--ink); border-bottom: 1px solid rgba(244,247,251,0.3); }
-    .desk { padding: 36px 0 48px; }
-    .desk h1 { font-size: clamp(40px, 5vw, 60px); }
-    .desk-grid { display: grid; grid-template-columns: 300px 1fr; gap: 28px; margin-top: 22px; }
+    .desk { padding: 28px 0 48px; }
+    .desk h1 { font-size: clamp(40px, 5vw, 56px); }
+    .bench { display: grid; grid-template-columns: 280px 1fr; gap: 16px; margin-top: 22px; align-items: start; }
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(10, 16, 26, 0.72);
+      padding: 16px;
+    }
+    .brain { display: flex; flex-direction: column; padding: 14px 14px 12px; }
+    .brain-top { display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+    .legend { display: flex; flex-wrap: wrap; gap: 14px 18px; margin-top: 8px; color: var(--muted); font-size: 12px; }
+    .strip { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .strip span { font-size: 12px; color: var(--muted); padding: 4px 8px; border-radius: 999px; border: 1px solid transparent; }
+    .strip span.on { color: var(--ink); border-color: var(--line); background: rgba(255,255,255,0.05); }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .swatch { width: 18px; height: 2px; background: rgba(180, 214, 245, 0.7); display: inline-block; }
+    .swatch.node { width: 7px; height: 7px; border-radius: 50%; background: #eef3f8; }
     label.file {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 14px 0;
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
+      display: grid;
+      gap: 4px;
+      padding: 16px;
+      border: 1px dashed rgba(160, 198, 235, 0.35);
+      border-radius: 14px;
       cursor: pointer;
       color: var(--ink);
     }
+    label.file:hover { border-color: rgba(160, 198, 235, 0.7); }
+    label.file small { color: var(--muted); }
     input[type=file] { display: none; }
     button:disabled { opacity: 0.5; cursor: progress; }
     .actions { display: flex; gap: 8px; margin-top: 16px; }
@@ -251,42 +270,70 @@
     .shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 18px; }
     .shots img { width: 100%; aspect-ratio: 1; object-fit: cover; background: #000; border-radius: 12px; display: block; border: 1px solid var(--line); }
     .shots figcaption { margin-top: 8px; }
-    .note { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
-    .note p { margin: 8px 0 0; color: #d5e0ea; line-height: 1.55; font-size: 15px; }
-    .chat-log { margin: 12px 0; display: flex; flex-direction: column; gap: 8px; }
-    .chat-log p { margin: 0; }
-    .chat-log .you { color: var(--ink); }
-    .ask { display: flex; gap: 8px; }
+    .assist { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 16px; margin-top: 16px; }
+    .note dl { margin: 12px 0 0; display: grid; gap: 12px; }
+    .note dt { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+    .note dd { margin: 4px 0 0; color: #d5e0ea; line-height: 1.5; font-size: 15px; }
+    .thread { display: flex; flex-direction: column; min-height: 280px; }
+    .hint { margin: 12px 0 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
+    .chat-log { margin: 12px 0; display: flex; flex-direction: column; gap: 10px; max-height: 320px; overflow: auto; }
+    .bubble { margin: 0; line-height: 1.5; font-size: 14px; }
+    .bubble b { display: block; font-weight: 500; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
+    .bubble.you { color: var(--ink); }
+    .bubble.ai { color: #d5e0ea; }
+    .think { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; min-height: 22px; }
+    .mind { width: 28px; height: 28px; flex: none; }
+    .mind circle { fill: #e7f2ff; transform-box: fill-box; transform-origin: center; animation: fire 1.3s ease-in-out infinite; }
+    .mind circle:nth-child(2) { animation-delay: 0.15s; }
+    .mind circle:nth-child(3) { animation-delay: 0.3s; }
+    .mind path { fill: none; stroke: rgba(180, 214, 245, 0.7); stroke-width: 1; }
+    @keyframes fire { 50% { opacity: 0.35; } }
+    @media (prefers-reduced-motion: reduce) {
+      .mind circle { animation: none; }
+    }
+    .ask { display: flex; gap: 8px; margin-top: auto; }
     .ask input {
       flex: 1;
-      background: transparent;
-      border: 0;
-      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--line);
+      border-radius: 999px;
       color: var(--ink);
       font: 15px "Outfit", "Avenir Next", sans-serif;
-      padding: 8px 0;
+      padding: 10px 14px;
     }
-    .ask input:focus { outline: none; border-bottom-color: #7ec8ff; }
+    .ask input:focus { outline: none; border-color: rgba(126, 200, 255, 0.7); }
     figure { margin: 0; }
-    canvas { width: 100%; height: 260px; display: block; margin-top: 8px; border-radius: 12px; border: 1px solid var(--line); }
+    #result { scroll-margin-top: 80px; }
+    #net { width: 100%; height: 460px; display: block; border: 0; border-radius: 12px; background: radial-gradient(480px 220px at 50% 42%, rgba(40, 80, 130, 0.28), transparent 70%); }
+    .steps { list-style: none; padding: 14px 0 0; margin: 14px 0 0; border-top: 1px solid var(--line); display: grid; gap: 10px; }
+    .steps li { color: var(--muted); font-size: 13px; line-height: 1.4; }
+    .steps b { display: block; color: var(--ink); font-weight: 500; }
     .hidden { display: none; }
     .prose { max-width: 68ch; padding: 48px 0 24px; }
     .prose h1 { font-size: clamp(40px, 5vw, 60px); }
     .prose p { color: #c9d5e2; line-height: 1.65; font-size: 17px; }
     .prose a { color: var(--ink); border-bottom: 1px solid rgba(244,247,251,0.35); }
+    @media (max-width: 800px) {
+      .shots { grid-template-columns: 1fr; }
+      #net { height: 320px; }
+      .reading { align-items: flex-start; }
+      .reading em { font-size: 36px; }
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <nav>
+  <header class="bar">
+    <div class="wrap bar-inner">
       <a class="brand" href="/"><span class="mark"></span> Retina</a>
-      <div class="links">
+      <nav class="links">
         <a href="/" class="{% if page == 'home' %}active{% endif %}">Home</a>
         <a href="/product" class="{% if page == 'product' %}active{% endif %}">Product</a>
         <a href="/about" class="{% if page == 'about' %}active{% endif %}">About</a>
-        <a class="go" href="/product">Open screen</a>
-      </div>
-    </nav>
+        {% if page != 'product' %}<a class="go" href="/product">Open screen</a>{% endif %}
+      </nav>
+    </div>
+  </header>
+  <div class="wrap">
     {% block content %}{% endblock %}
     <footer>
       <span>{{ disclaimer }}</span>

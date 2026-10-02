@@ -3,16 +3,15 @@
 {% block content %}
   <section class="desk">
     <div class="kicker">Product</div>
-    <h1 style="font-size: clamp(40px, 5vw, 56px); margin-bottom: 8px;">Screen</h1>
-    <p class="lede" style="margin-bottom: 28px;">Upload a fundus photograph, or run a held-out test image. The stage, the attention map, and the forward pass are for this frame only.</p>
-    <div class="window" style="padding: 8px 18px 18px;">
-    <div class="desk-grid">
-      <aside>
+    <h1>Screen</h1>
+    <p class="lede">Upload a fundus photograph. The stage comes from the screening model. The map is that forward pass. The note only explains this photograph.</p>
+    <div class="bench">
+      <aside class="panel">
         <form id="form">
           {% csrf_token %}
           <label class="file" for="image">
             <span id="fileLabel">Choose a fundus photograph</span>
-            <small>JPG, PNG</small>
+            <small>JPG or PNG</small>
           </label>
           <input id="image" name="image" type="file" accept="image/png,image/jpeg" />
           <div class="actions">
@@ -20,45 +19,71 @@
             <button id="sample" class="quiet" type="button">Test image</button>
           </div>
         </form>
-        <p id="status">Nothing loaded.</p>
+        <p id="status">No photograph yet.</p>
+        <ul class="steps">
+          <li><b>Stage</b>Set by the screening model, and left unchanged.</li>
+          <li><b>Forward pass</b>Layers and the weights between them, lit by this frame.</li>
+          <li><b>Note</b>A written explanation of this photograph only.</li>
+        </ul>
       </aside>
-      <section>
-        <div id="result" class="hidden">
-          <div class="reading">
-            <div>
-              <div class="mono">Stage</div>
-              <em id="gradeName">—</em>
-            </div>
-            <div>
-              <div class="mono">Certainty</div>
-              <b id="confidence">—</b>
-            </div>
-          </div>
-          <p class="mono" id="arch" style="margin-top: 16px;"></p>
-          <div class="shots">
-            <figure><img id="imgRaw" alt="Fundus photograph" /><figcaption class="mono">Input</figcaption></figure>
-            <figure><img id="imgPrep" alt="Prepared retina" /><figcaption class="mono">Prepared</figcaption></figure>
-            <figure><img id="imgCam" alt="Attention map" /><figcaption class="mono">Attention</figcaption></figure>
-          </div>
-          <div id="note" class="note hidden">
-            <div class="mono">Generated note, not a diagnosis</div>
-            <p id="noteStage"></p>
-            <p id="noteScore"></p>
-            <p id="noteNext"></p>
-            <p id="noteLimit"></p>
-            <div id="chatLog" class="chat-log"></div>
-            <form id="chatForm" class="ask">
-              <input id="chatInput" type="text" maxlength="500" placeholder="Ask about this photograph" autocomplete="off" />
-              <button class="quiet" type="submit">Send</button>
-            </form>
-          </div>
+      <div class="panel brain">
+        <div class="brain-top">
+          <div class="mono" id="passLabel">Forward pass</div>
+          <div class="mono" id="passState">Waiting</div>
         </div>
-        <div style="margin-top: 22px; border-top: 1px solid var(--line); padding-top: 12px;">
-          <div class="mono">Forward pass</div>
-          <canvas id="net" width="1600" height="520"></canvas>
+        <canvas id="net" width="1200" height="780" aria-label="Layers of the screening network, connected by weights"></canvas>
+        <div id="stageStrip" class="strip"></div>
+        <div class="legend">
+          <span><i class="swatch node"></i> Neurons in a layer</span>
+          <span><i class="swatch"></i> Weights to the next layer</span>
+          <span id="passCaption">Eight stages of the network.</span>
         </div>
-      </section>
+      </div>
     </div>
+
+    <div id="result" class="hidden">
+      <div class="panel" style="margin-top: 16px;">
+        <div class="reading">
+          <div>
+            <div class="mono">Stage</div>
+            <em id="gradeName">—</em>
+          </div>
+          <div>
+            <div class="mono">Model score</div>
+            <b id="confidence">—</b>
+          </div>
+        </div>
+        <p class="mono" id="arch" style="margin-top: 16px;"></p>
+        <div class="shots">
+          <figure><img id="imgRaw" alt="Fundus photograph" /><figcaption class="mono">Input</figcaption></figure>
+          <figure><img id="imgPrep" alt="Prepared retina" /><figcaption class="mono">Prepared</figcaption></figure>
+          <figure><img id="imgCam" alt="Attention map" /><figcaption class="mono">Attention</figcaption></figure>
+        </div>
+      </div>
+      <div class="assist">
+        <section id="note" class="panel note">
+          <div class="mono">Generated note, not a diagnosis</div>
+          <p id="noteThink" class="think">
+            <svg class="mind" viewBox="0 0 36 28" aria-hidden="true"><circle cx="8" cy="16" r="2.3"/><circle cx="16" cy="7" r="2.3"/><circle cx="27" cy="13" r="2.3"/><circle cx="18" cy="22" r="2.2"/><path d="M8 16 L16 7 L27 13 L18 22 Z"/></svg>
+            <span id="noteThinkText">Writing the note from this reading.</span>
+          </p>
+          <dl id="noteBody" class="hidden">
+            <div><dt>Stage</dt><dd id="noteStage"></dd></div>
+            <div><dt>Score</dt><dd id="noteScore"></dd></div>
+            <div><dt>Next</dt><dd id="noteNext"></dd></div>
+            <div><dt>Limit</dt><dd id="noteLimit"></dd></div>
+          </dl>
+        </section>
+        <section class="panel thread">
+          <div class="mono">Ask about this photograph</div>
+          <p id="chatHint" class="hint">Questions stay on this photograph.</p>
+          <div id="chatLog" class="chat-log"></div>
+          <form id="chatForm" class="ask">
+            <input id="chatInput" type="text" maxlength="500" placeholder="Ask about this reading" autocomplete="off" />
+            <button class="quiet" type="submit">Send</button>
+          </form>
+        </section>
+      </div>
     </div>
   </section>
 {% endblock %}
@@ -69,9 +94,24 @@
   const canvas = document.getElementById("net");
   const ctx = canvas.getContext("2d");
   const fileInput = document.getElementById("image");
+  const passState = document.getElementById("passState");
+  const passCaption = document.getElementById("passCaption");
+  const ARCH = [
+    { label: "Stem", units: 32 },
+    { label: "Blocks 1–2", units: 24 },
+    { label: "Blocks 3–4", units: 40 },
+    { label: "Blocks 5–6", units: 112 },
+    { label: "Block 7 + top", units: 320 },
+    { label: "Dense 512", units: 512 },
+    { label: "Dense 256", units: 256 },
+    { label: "Stage logits", units: 4 },
+  ];
+  const MIND = '<svg class="mind" viewBox="0 0 36 28" aria-hidden="true"><circle cx="8" cy="16" r="2.3"/><circle cx="16" cy="7" r="2.3"/><circle cx="27" cy="13" r="2.3"/><circle cx="18" cy="22" r="2.2"/><path d="M8 16 L16 7 L27 13 L18 22 Z"/></svg>';
   let payload = null;
-  let playStart = 0;
-  let raf = 0;
+  let mode = "idle";
+  let playStart = performance.now();
+  let shownStage = "";
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   fileInput.addEventListener("change", () => {
     const file = fileInput.files && fileInput.files[0];
@@ -101,17 +141,21 @@
   });
 
   async function send(data) {
-    statusEl.textContent = "Reading the photograph.";
+    mode = "pass";
+    playStart = performance.now();
+    statusEl.textContent = "The photograph is moving through the network.";
+    passCaption.textContent = "Signal moving from the stem to the stage logits.";
     document.getElementById("go").disabled = true;
     try {
       const response = await fetch("/api/screen", { method: "POST", body: data });
       const body = await response.json();
       if (!response.ok) throw new Error(body.error || "Request failed");
       show(body);
-      statusEl.textContent = "Stage " + body.grade + " of 4. The trace below is this photograph.";
+      statusEl.textContent = "Stage " + body.grade + " of 4. The map is this forward pass.";
       loadNote(body.reading_id);
     } catch (err) {
       statusEl.textContent = err.message;
+      mode = payload ? "live" : "idle";
     } finally {
       document.getElementById("go").disabled = false;
     }
@@ -123,7 +167,11 @@
 
   function show(body) {
     payload = body;
-    document.getElementById("result").classList.remove("hidden");
+    mode = "live";
+    playStart = performance.now();
+    const result = document.getElementById("result");
+    result.classList.remove("hidden");
+    result.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
     document.getElementById("gradeName").textContent = pretty(body.grade_name);
     document.getElementById("confidence").textContent = Math.round(body.confidence * 100) + "%";
     const head = body.coral ? "Ordinal head" : "Softmax head";
@@ -133,91 +181,144 @@
     document.getElementById("imgPrep").src = body.images.preprocessed;
     document.getElementById("imgCam").src = body.images.gradcam;
     document.getElementById("chatLog").replaceChildren();
+    document.getElementById("chatHint").classList.remove("hidden");
     document.getElementById("chatInput").value = "";
-    playStart = performance.now();
-    if (!raf) raf = requestAnimationFrame(frame);
+    passCaption.textContent = "Brighter layers fired more on this photograph.";
   }
 
-  function nodesFor(stage) {
-    return Math.max(4, Math.min(8, Math.round(Math.log2((stage.units || 16) + 1))));
+  function stagesNow() {
+    if (payload && payload.stages && payload.stages.length) return payload.stages;
+    return ARCH.map((stage) => ({ ...stage, intensity: 0.28 }));
   }
 
-  function layout(width, height) {
-    const stages = payload.stages;
-    const cols = stages.length;
-    const top = 24;
-    const bottom = 78;
+  function build() {
+    const stages = stagesNow();
+    const n = stages.length;
     return stages.map((stage, i) => {
-      const count = nodesFor(stage);
-      const x = (i + 0.5) * (width / cols);
+      const count = Math.max(6, Math.min(9, Math.round(4 + Math.log2((stage.units || 16) + 1))));
+      const x = n === 1 ? 0 : (i / (n - 1) - 0.5) * 6.2;
+      const intensity = stage.intensity == null ? 0.28 : stage.intensity;
+      const ring = 1.15 + Math.min(1, intensity) * 0.55;
       const nodes = [];
       for (let k = 0; k < count; k++) {
-        const y = top + ((k + 0.5) / count) * (height - top - bottom);
-        nodes.push({ x, y });
+        const angle = (k / count) * Math.PI * 2 + i * 0.4;
+        nodes.push({ x, y: Math.cos(angle) * ring, z: Math.sin(angle) * ring });
       }
-      return { stage, nodes };
+      return { stage, nodes, i, x, ring };
     });
+  }
+
+  function project(point, yaw, w, h) {
+    const c = Math.cos(yaw);
+    const s = Math.sin(yaw);
+    const x = point.x * c - point.z * s;
+    const z = point.x * s + point.z * c;
+    const pitch = 0.62;
+    const y = point.y * Math.cos(pitch) - z * Math.sin(pitch) * 0.15;
+    const depth = z * Math.cos(pitch) + point.y * Math.sin(pitch) + 8.4;
+    const f = (Math.min(w, 980) * 0.118) * (7.4 / depth);
+    return { x: w / 2 + x * f, y: h * 0.44 + y * f, depth };
   }
 
   function frame(now) {
-    raf = requestAnimationFrame(frame);
-    const width = canvas.width;
-    const height = canvas.height;
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = "#07090d";
-    ctx.fillRect(0, 0, width, height);
-    if (!payload) {
-      ctx.fillStyle = "#93a3b5";
-      ctx.font = "16px Outfit, sans-serif";
-      ctx.fillText("The network trace appears after a reading.", 28, height / 2);
-      return;
+    requestAnimationFrame(frame);
+    const rect = canvas.getBoundingClientRect();
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    const bw = Math.max(1, Math.floor(rect.width * dpr));
+    const bh = Math.max(1, Math.floor(rect.height * dpr));
+    if (canvas.width !== bw || canvas.height !== bh) {
+      canvas.width = bw;
+      canvas.height = bh;
     }
-    const columns = layout(width, height);
-    const elapsed = (now - playStart) / 1400;
-    const cursor = elapsed % (columns.length + 0.6);
+    const w = rect.width;
+    const h = rect.height;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
 
-    for (let i = 0; i < columns.length - 1; i++) {
-      const a = columns[i];
-      const b = columns[i + 1];
-      const live = cursor > i && cursor < i + 1.15;
-      a.nodes.forEach((na, ai) => {
-        const nb = b.nodes[Math.min(b.nodes.length - 1, Math.round(ai * (b.nodes.length - 1) / Math.max(1, a.nodes.length - 1)))];
-        const nb2 = b.nodes[Math.min(b.nodes.length - 1, ai % b.nodes.length)];
-        [nb, nb2].forEach((target) => {
-          ctx.beginPath();
-          ctx.moveTo(na.x, na.y);
-          ctx.lineTo(target.x, target.y);
-          const alpha = live ? 0.28 + a.stage.intensity * 0.45 : 0.07 + a.stage.intensity * 0.08;
-          ctx.strokeStyle = live ? "rgba(126,200,255," + alpha + ")" : "rgba(180,200,220," + alpha + ")";
-          ctx.lineWidth = live ? 1.1 : 0.6;
-          ctx.stroke();
-        });
+    const cols = build();
+    const yaw = reduced ? 0.55 : 0.7 + Math.sin(now / 3800) * 0.38;
+    const speed = mode === "pass" ? 1.25 : mode === "live" ? 0.42 : 0.18;
+    const head = reduced ? 0 : ((now - playStart) / 1000) * speed % cols.length;
+    const liveIndex = Math.min(cols.length - 1, Math.floor(head));
+    const label = mode === "idle" ? "Waiting" : cols[liveIndex].stage.label;
+    if (label !== shownStage) {
+      shownStage = label;
+      passState.textContent = label;
+    }
+
+    const pts = cols.map((col) => col.nodes.map((node) => project(node, yaw, w, h)));
+    cols.forEach((col, i) => {
+      ctx.beginPath();
+      col.nodes.forEach((_, k) => {
+        const p = pts[i][k];
+        if (k === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
       });
-    }
-
-    columns.forEach((col, i) => {
-      const live = cursor > i - 0.15 && cursor < i + 1;
-      col.nodes.forEach((node) => {
-        const r = live ? 3.2 + col.stage.intensity * 1.6 : 2.1;
+      ctx.closePath();
+      ctx.strokeStyle = "rgba(170, 204, 235, 0.16)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    });
+    for (let i = 0; i < cols.length - 1; i++) {
+      const hot = !reduced && head >= i && head < i + 1.35;
+      const fade = hot ? (1 - Math.min(1, Math.abs(head - i - 0.45))) : 0;
+      const gain = 0.15 + (cols[i].stage.intensity || 0.2) * 0.55;
+      cols[i].nodes.forEach((_, a) => {
+        const b = Math.round(a * (cols[i + 1].nodes.length - 1) / Math.max(1, cols[i].nodes.length - 1));
+        const from = pts[i][a];
+        const to = pts[i + 1][b];
         ctx.beginPath();
-        ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
-        ctx.fillStyle = live ? "#eef3f8" : "rgba(238,243,248,0.4)";
-        ctx.fill();
+        ctx.moveTo(from.x, from.y);
+        ctx.lineTo(to.x, to.y);
+        ctx.strokeStyle = hot
+          ? "rgba(214, 232, 255," + (0.18 + fade * 0.55) + ")"
+          : "rgba(168, 196, 224," + (0.05 + gain * 0.16) + ")";
+        ctx.lineWidth = hot ? 1.15 : 0.6;
+        ctx.stroke();
+        if (hot && a === Math.floor(cols[i].nodes.length / 2)) {
+          const t = Math.min(1, Math.max(0, head - i));
+          ctx.beginPath();
+          ctx.arc(from.x + (to.x - from.x) * t, from.y + (to.y - from.y) * t, 2.4, 0, Math.PI * 2);
+          ctx.fillStyle = "#f4f8fc";
+          ctx.fill();
+        }
       });
-      ctx.textAlign = "center";
-      ctx.fillStyle = live ? "#7ec8ff" : "#93a3b5";
-      ctx.font = "13px Outfit, sans-serif";
-      ctx.fillText(col.stage.label, col.nodes[0].x, height - 36);
-      ctx.font = "12px Outfit, sans-serif";
-      ctx.fillStyle = "#6d7c8e";
-      const units = col.stage.units ? col.stage.units + " units" : col.stage.layers + " layers";
-      ctx.fillText(units, col.nodes[0].x, height - 16);
+    }
+
+    const order = [];
+    cols.forEach((col, i) => {
+      col.nodes.forEach((_, k) => order.push({ i, k, depth: pts[i][k].depth }));
+    });
+    order.sort((a, b) => b.depth - a.depth);
+    order.forEach(({ i, k }) => {
+      const p = pts[i][k];
+      const hot = !reduced && head >= i - 0.15 && head < i + 1;
+      const intensity = cols[i].stage.intensity || 0.25;
+      const r = (hot ? 3.1 : 2.2) + intensity * 1.3;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+      ctx.fillStyle = hot ? "rgba(244,248,252," + (0.75 + intensity * 0.25) + ")" : "rgba(214,226,238," + (0.28 + intensity * 0.45) + ")";
+      ctx.fill();
+    });
+
+    const strip = document.getElementById("stageStrip");
+    if (strip.childElementCount !== cols.length) {
+      strip.replaceChildren(...cols.map((col) => {
+        const chip = document.createElement("span");
+        chip.textContent = col.stage.label;
+        return chip;
+      }));
+    }
+    [...strip.children].forEach((chip, i) => {
+      chip.classList.toggle("on", mode !== "idle" && i === liveIndex);
     });
   }
-  raf = requestAnimationFrame(frame);
+  requestAnimationFrame(frame);
 
   function fillNote(note) {
-    document.getElementById("note").classList.remove("hidden");
+    const ready = Boolean(note.stage_line);
+    document.getElementById("noteThink").classList.toggle("hidden", ready);
+    document.getElementById("noteBody").classList.toggle("hidden", !ready);
     document.getElementById("noteStage").textContent = note.stage_line || "";
     document.getElementById("noteScore").textContent = note.score_line || "";
     document.getElementById("noteNext").textContent = note.next_step || "";
@@ -225,12 +326,8 @@
   }
 
   async function loadNote(readingId) {
-    fillNote({
-      stage_line: "Writing a note from this reading.",
-      score_line: "",
-      next_step: "",
-      limit: "",
-    });
+    document.getElementById("noteThinkText").textContent = "Writing the note from this reading.";
+    fillNote({ stage_line: "", score_line: "", next_step: "", limit: "" });
     const data = new FormData();
     data.append("csrfmiddlewaretoken", csrf());
     data.append("reading_id", readingId);
@@ -256,11 +353,20 @@
     const message = input.value.trim();
     if (!message) return;
     input.value = "";
+    document.getElementById("chatHint").classList.add("hidden");
     const log = document.getElementById("chatLog");
     const mine = document.createElement("p");
-    mine.className = "you";
-    mine.textContent = message;
+    mine.className = "bubble you";
+    const who = document.createElement("b");
+    who.textContent = "You";
+    mine.appendChild(who);
+    mine.appendChild(document.createTextNode(message));
     log.appendChild(mine);
+    const pending = document.createElement("p");
+    pending.className = "bubble ai think";
+    pending.innerHTML = MIND + "<span>Thinking about this photograph</span>";
+    log.appendChild(pending);
+    log.scrollTop = log.scrollHeight;
     const data = new FormData();
     data.append("csrfmiddlewaretoken", csrf());
     data.append("reading_id", payload.reading_id);
@@ -269,14 +375,17 @@
       const response = await fetch("/api/chat", { method: "POST", body: data });
       const body = await response.json();
       if (!response.ok) throw new Error(body.error || "Chat failed");
-      const reply = document.createElement("p");
-      reply.textContent = body.reply;
-      log.appendChild(reply);
+      pending.className = "bubble ai";
+      pending.replaceChildren();
+      const tag = document.createElement("b");
+      tag.textContent = "Note";
+      pending.appendChild(tag);
+      pending.appendChild(document.createTextNode(body.reply));
     } catch (err) {
-      const reply = document.createElement("p");
-      reply.textContent = err.message;
-      log.appendChild(reply);
+      pending.className = "bubble ai";
+      pending.textContent = err.message;
     }
+    log.scrollTop = log.scrollHeight;
   });
 </script>
 {% endblock %}
