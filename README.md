@@ -33,7 +33,7 @@ uv run python scripts/evaluate_export.py
 uv run python showcase/manage.py runserver 127.0.0.1:8000
 ```
 
-Open `http://127.0.0.1:8000/` for Home, Product, and About. The screen reads `models/best_model.keras` (CORAL, test accuracy 0.651, quadratic weighted kappa 0.738, decision threshold 0.525).
+Open `http://127.0.0.1:8000/` for Home, Product, and About. The screen reads `models/best_model.keras` (CORAL, test accuracy 0.627, quadratic weighted kappa 0.768, decision threshold 0.5).
 
 The public site is [https://retina.udithsandaruwan.com](https://retina.udithsandaruwan.com). A push to `main` builds the image and restarts the container on the EC2 host.
 

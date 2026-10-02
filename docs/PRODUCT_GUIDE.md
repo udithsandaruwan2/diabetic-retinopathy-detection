@@ -2,8 +2,8 @@
 
 **Audience:** product owners, engineers, and operators who need the full story of this system.  
 **Not a coursework report** — this is the production-oriented product bible.  
-**Status:** EXP-ACC-070 export (2026-10-01). Test split never used for training.  
-**Deployed winner:** CORAL · test Acc **0.651** · QWK **0.738** · threshold **0.525** · `models/best_model.keras`
+**Status:** Deployed model restored to EXP-ACC-001 (2026-10-02). EXP-ACC-070 remains on disk as `models/coral_acc70.keras` and is not the live grader. Test split never used for training.  
+**Deployed winner:** CORAL · test Acc **0.627** · QWK **0.768** · threshold **0.5** · `models/best_model.keras`
 
 ---
 
@@ -238,7 +238,7 @@ Typical transforms (see `src/dr_detect/augment.py`): horizontal flip, small rota
 | 3 Severe | 2.89 |
 | 4 Proliferative | 1.90 |
 
-Softmax training in the earlier scripts uses these weights. The deployed EXP-ACC-070 run did not. It balanced the pooled training rows by duplication only.
+Softmax training in the earlier scripts uses these weights. The EXP-ACC-070 run did not. It balanced the pooled training rows by duplication only.
 
 ---
 
@@ -259,7 +259,7 @@ Softmax training in the earlier scripts uses these weights. The deployed EXP-ACC
 EfficientNetB0 → GlobalAveragePooling2D → Dense(512) → Dropout(0.3) → Dense(256) → Dropout(0.3) → Dense(5, softmax)
 ```
 
-The deployed EXP-ACC-070 run used this head with label smoothing off and no class weights.
+The EXP-ACC-070 run used this head with label smoothing off and no class weights.
 
 ### CORAL ordinal head
 
@@ -267,7 +267,7 @@ The deployed EXP-ACC-070 run used this head with label smoothing off and no clas
 EfficientNetB0 → GAP → Dense(512) → Dropout(0.3) → Dense(256) → Dropout(0.3) → Dense(4, linear)
 ```
 
-The four logits are cumulative thresholds. The deployed cutoff is 0.525, chosen on the validation set.
+The four logits are cumulative thresholds. The live cutoff is 0.5. The EXP-ACC-070 cutoff was 0.525, chosen on the validation set.
 
 - Loss: binary cross-entropy on cumulative levels (CORAL loss).
 - Decode: sigmoid → count how many thresholds fire → integer grade 0–4.
@@ -358,7 +358,7 @@ Held-out **test set N = 413** (never used for training or early stopping). Metri
 | Softmax | 0.625 | 0.532 | 0.625 | 0.724 |
 | **CORAL (winner)** | **0.651** | 0.508 | 0.636 | **0.738** |
 
-The previous deployed CORAL model (EXP-ACC-001) was Acc 0.627 / QWK 0.768. This run raised exact accuracy and lowered kappa. Softmax recovered from 0.511 to 0.625. CORAL is still the deployed head because exact accuracy is higher. 70% exact accuracy was not reached (269 of 413).
+EXP-ACC-001 CORAL was Acc 0.627 / QWK 0.768. This run raised exact accuracy and lowered kappa. Softmax recovered from 0.511 to 0.625. The live grader was put back to EXP-ACC-001 because that model has the higher kappa and fewer far misses. 70% exact accuracy was not reached (269 of 413).
 
 ![Softmax vs CORAL](figures/softmax_vs_coral.png)
 

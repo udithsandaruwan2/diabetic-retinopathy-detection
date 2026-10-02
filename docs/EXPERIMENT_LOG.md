@@ -166,5 +166,11 @@ _(Training runs appended below as they complete.)_
 - Previous deployed accuracy 0.627. Colab `meta.json` recorded previous as 0.0 because the old meta file was not on that machine. The local deploy check is 0.651 > 0.627, so the winner is installed.
 - Softmax accuracy 0.6247, QWK 0.7245, far-error 0.1525.
 - CORAL accuracy 0.6513, QWK 0.7380, far-error 0.0993, MAE 0.472, threshold 0.525.
-- Deployed: yes. Winner: coral. Report: `artifacts/experiments/acc70_report.json`.
+- Deployed: no. The live grader was returned to EXP-ACC-001. Report: `artifacts/experiments/acc70_report.json`.
 - 70% exact accuracy (289/413) was not reached (269/413).
+
+## DEPLOY — restore EXP-ACC-001
+
+- The EXP-ACC-070 grader called Severe on photographs whose model score sat near 0.53. That score is the ordinal margin, not the chance of Severe.
+- Live weights are again `models/coral_effb0.keras` (test Acc 0.627, QWK 0.768, far-error 0.082, threshold 0.5).
+- EXP-ACC-070 weights remain at `models/coral_acc70.keras`.
