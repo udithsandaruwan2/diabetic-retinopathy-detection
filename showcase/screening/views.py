@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import threading
+from pathlib import Path
+
 import cv2
 import numpy as np
-import pandas as pd
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -13,6 +15,27 @@ from screening.assistant import remember, reply, write_note
 from screening.inference import DISCLAIMER, screen_image
 
 DEVELOPER_URL = "https://udithsandaruwan.com"
+SAMPLES = Path(__file__).resolve().parent / "samples"
+_sample_lock = threading.Lock()
+_sample_i = 0
+
+
+def _load_sample():
+    """Next bundled test photograph. These files ship with the app."""
+    global _sample_i
+    if not SAMPLES.is_dir():
+        return None
+    files = sorted(
+        path
+        for path in SAMPLES.iterdir()
+        if path.suffix.lower() in {".png", ".jpg", ".jpeg"}
+    )
+    if not files:
+        return None
+    with _sample_lock:
+        path = files[_sample_i % len(files)]
+        _sample_i += 1
+    return cv2.imread(str(path))
 
 
 def _ctx(page: str) -> dict:
@@ -46,10 +69,7 @@ def screen(request: HttpRequest):
         data = np.frombuffer(upload.read(), dtype=np.uint8)
         bgr = cv2.imdecode(data, cv2.IMREAD_COLOR)
     elif request.POST.get("sample") == "1":
-        test_csv = CFG.processed_dir / "test.csv"
-        if test_csv.exists():
-            row = pd.read_csv(test_csv).sample(1).iloc[0]
-            bgr = cv2.imread(str(row["image_path"]))
+        bgr = _load_sample()
     if bgr is None:
         return JsonResponse({"error": "Upload a fundus image or use a sample."}, status=400)
     try:
